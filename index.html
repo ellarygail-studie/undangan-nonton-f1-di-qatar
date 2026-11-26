@@ -1,29 +1,34 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+  <!-- Pengaturan karakter UTF-8 dan viewport responsif agar skala pas di mobile, tablet, maupun desktop -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Undangan Resmi — Formula 1 Qatar Airways Qatar Grand Prix 2026 (Round 22)</title>
   <meta name="description" content="Undangan digital resmi Formula 1 Qatar Airways Qatar Grand Prix 2026 (Round 22) di Lusail International Circuit, Qatar (27-29 November 2026). Jadwal WIB, Digital Race Pass, Peta Sirkuit, dan RSVP." />
   <meta name="theme-color" content="#0B0C0E" />
 
-  <!-- Google Fonts: Oswald, Inter, JetBrains Mono -->
+  <!-- Memuat tipografi resmi: Oswald (judul), Inter (teks isi), dan JetBrains Mono (jam & kode pass) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-  <!-- Leaflet 1.9.4 CSS -->
+  <!-- Stylesheet Leaflet 1.9.4 untuk merender peta interaktif sirkuit Lusail -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
-  <!-- Main Stylesheet -->
+  <!-- Stylesheet utama dengan tema Motorsport Editorial / High-Contrast Paddock -->
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
   <!-- =================================================================
-       HERO COVER / SAMPUL PEMBUKA UNDANGAN (Rubric #1: Smooth Open + Auto Audio)
+       SAMPUL PEMBUKA UNDANGAN (HERO COVER)
+       Menampilkan nama tamu dinamis (?to=) dan tombol "Buka Undangan Resmi"
+       yang membuka halaman dengan animasi halus sekaligus memutar lagu F1.
        ================================================================= -->
   <div id="invitationCover" class="invitation-cover" role="dialog" aria-modal="true" aria-labelledby="coverEventTitle">
+    <!-- Garis aksen kerb sirkuit di bagian paling atas sampul -->
     <div class="kerb-stripe" aria-hidden="true"></div>
+    <!-- Lapisan gambar latar belakang malam sirkuit Lusail dengan overlay gelap -->
     <div class="cover-bg-layer" aria-hidden="true"></div>
     <div class="container cover-inner">
       <div class="cover-top-meta mono">
@@ -36,6 +41,7 @@
         <h2 id="coverEventTitle" class="cover-title">FORMULA 1 QATAR AIRWAYS QATAR GRAND PRIX 2026</h2>
         <p class="cover-host">Diselenggarakan oleh <strong id="coverHostName">Paddock Club Indonesia &amp; Lusail Motorsport Hospitality</strong></p>
 
+        <!-- Kartu penerima undangan dinamis pada sampul depan -->
         <div class="cover-guest-card">
           <span class="cover-guest-kicker mono">KEPADA YANG TERHORMAT</span>
           <div class="cover-guest-name" id="coverGuestName">Tamu Undangan VIP</div>
@@ -43,6 +49,7 @@
           <span class="cover-pass-chip mono" id="coverGuestPass">PADDOCK CLUB VIP</span>
         </div>
 
+        <!-- Tombol pemicu animasi buka sampul & pemutar audio latar -->
         <button type="button" id="btnOpenInvitation" class="btn btn-vermilion btn-lg cover-open-btn">
           <i data-lucide="mail-open"></i>
           <span>Buka Undangan Resmi</span>
@@ -56,12 +63,14 @@
     </div>
   </div>
 
-  <!-- Kerb Top Accent Bar -->
+  <!-- Garis aksen kerb pembatas atas halaman utama -->
   <div class="kerb-stripe" aria-hidden="true"></div>
 
-  <!-- Top Telemetry & Navigation Header -->
+  <!-- =================================================================
+       HEADER UTAMA: BANNER PRATINJAU ADMIN, BAR TELEMETRI & NAVIGASI
+       ================================================================= -->
   <header class="site-header" id="top">
-    <!-- Sticky Admin Preview Banner (Shown only when previewing a specific guest from Admin Panel) -->
+    <!-- Banner Pratinjau Admin (muncul hanya saat Admin klik Preview pada salah satu tamu) -->
     <div id="previewBanner" class="preview-banner hidden" role="status" aria-live="polite">
       <div class="container preview-banner-inner">
         <div class="preview-banner-info">
@@ -81,6 +90,7 @@
       </div>
     </div>
 
+    <!-- Bar informasi telemetri sirkuit dan jam WIB real-time -->
     <div class="telemetry-strip">
       <div class="container telemetry-strip-inner">
         <div class="telemetry-left">
@@ -96,9 +106,11 @@
       </div>
     </div>
 
+    <!-- Bar navigasi utama: logo vektor SVG, tautan seksi, tombol lagu, dan tombol RSVP -->
     <nav class="main-nav" aria-label="Navigasi Utama">
       <div class="container nav-inner">
         <a href="#top" class="brand-logo">
+          <!-- Ikon logo geometris F1 bergaya tiga strip warna resmi -->
           <svg class="brand-mark" viewBox="0 0 44 28" width="40" height="26" aria-hidden="true">
             <polygon points="4,24 14,4 26,4 16,24" fill="#D91E18" />
             <polygon points="20,24 30,4 36,4 26,24" fill="#8A1538" />
@@ -116,6 +128,7 @@
           <a href="#circuit" class="nav-link">Sirkuit &amp; Peta</a>
           <a href="#gallery" class="nav-link">Galeri</a>
           <a href="#rsvp" class="nav-link">RSVP</a>
+          <!-- Tombol cepat pengatur audio di navbar (tersinkron dengan tombol melayang) -->
           <button type="button" id="btnNavAudioToggle" class="nav-audio-btn" data-audio-toggle aria-pressed="false" title="Aktifkan atau matikan musik latar F1 Theme">
             <i data-lucide="volume-x" id="navAudioIcon"></i>
             <span id="navAudioLabel" class="mono">LAGU: MATI</span>
@@ -126,6 +139,7 @@
           </a>
         </div>
 
+        <!-- Tombol hamburger menu khusus layar tablet potret & smartphone -->
         <button type="button" class="mobile-nav-toggle" id="btnMobileMenu" aria-label="Buka menu navigasi" aria-expanded="false">
           <i data-lucide="menu"></i>
         </button>
@@ -135,12 +149,12 @@
 
   <main>
     <!-- =================================================================
-         HERO SECTION — HIGH-CONTRAST PADDOCK TELEMETRY & COUNTDOWN
+         BAGIAN HERO — KARTU TAMU VIP & MENARA HITUNG MUNDUR REAL-TIME
          ================================================================= -->
     <section id="hero" class="hero-section">
       <div class="hero-grid-overlay" aria-hidden="true"></div>
       <div class="container hero-layout">
-        <!-- Left Column: Editorial Event Headline & VIP Addressee Card -->
+        <!-- Kolom Kiri: Judul Acara Editorial & Kartu Sapaan Personal -->
         <div class="hero-editorial">
           <div class="eyebrow-row">
             <span class="badge badge-maroon">QATAR AIRWAYS TITLE PARTNER</span>
@@ -156,7 +170,7 @@
             Undangan resmi akhir pekan balap malam seri ke-22 musim 2026 di Lusail International Circuit. Diselenggarakan oleh <strong id="heroHostName">Paddock Club Indonesia &amp; Lusail Motorsport Hospitality</strong>.
           </p>
 
-          <!-- Personalized VIP Greeting Card ("Kepada Yang Terhormat") -->
+          <!-- Kartu Penerima VIP ("Kepada Yang Terhormat"), otomatis terisi dari URL (?to=...) -->
           <div class="addressee-card" id="vipAddresseeCard">
             <div class="addressee-card-top">
               <span class="addressee-label">
@@ -193,8 +207,9 @@
           </div>
         </div>
 
-        <!-- Right Column: Real-Time Telemetry Countdown Tower -->
+        <!-- Kolom Kanan: Menara Telemetri Hitung Mundur Real-Time -->
         <aside class="countdown-tower" aria-label="Hitung Mundur Sesi Balap">
+          <!-- Indikator status sesi (Menuju Sesi Terdekat / SEDANG BERLANGSUNG) -->
           <div class="tower-header">
             <div class="tower-status" id="countdownStatusWrap">
               <span class="status-dot" id="countdownStatusDot"></span>
@@ -203,6 +218,7 @@
             <span class="tower-round mono">R22 // LUSAIL</span>
           </div>
 
+          <!-- Dropdown pemilih target hitung mundur: Otomatis atau per sesi manual -->
           <div class="tower-selector-group">
             <label for="countdownTargetSelect" class="selector-label">
               <i data-lucide="crosshair"></i>
@@ -221,6 +237,7 @@
             </div>
           </div>
 
+          <!-- Ringkasan sesi target beserta jam WIB dan waktu lokal Qatar (AST) -->
           <div class="tower-session-focus">
             <div class="focus-session-kicker">SESI AKTIF / TARGET</div>
             <div class="focus-session-name" id="countdownSessionTitle">FP1 &mdash; FREE PRACTICE 1</div>
@@ -230,6 +247,7 @@
             </div>
           </div>
 
+          <!-- Angka hitung mundur Hari, Jam, Menit, Detik dengan font tabular-nums -->
           <div class="countdown-digits-grid" role="timer" aria-live="off">
             <div class="digit-box">
               <span class="digit-value mono" id="cdDays">00</span>
@@ -249,14 +267,14 @@
             </div>
           </div>
 
-          <!-- Weekend Telemetry Progression Bar -->
+          <!-- Indikator progres 5 sesi balap akhir pekan (diisi dinamis oleh app.js) -->
           <div class="tower-progression">
             <div class="progression-label-row">
               <span class="mono">PROGRES AKHIR PEKAN BALAP</span>
               <span class="mono" id="weekendProgressSummary">5 SESI RESMI</span>
             </div>
             <div class="progression-track" id="weekendStepsTrack">
-              <!-- Populated dynamically: FP1, FP2, FP3, QUALI, RACE -->
+              <!-- Diisi otomatis: FP1, FP2, FP3, QUALI, RACE -->
             </div>
           </div>
         </aside>
@@ -264,8 +282,8 @@
     </section>
 
     <!-- =================================================================
-         SECTION 01 — FORMAL INVITATION LETTER & DIGITAL RACE PASS
-         (Warm Stone #F4F3EE & Paper #FAFAF8 Editorial High-Contrast)
+         BAGIAN 01 — SURAT UNDANGAN RESMI & KARTU DIGITAL RACE PASS
+         Menggunakan tema terang kontras tinggi (Warm Stone #F4F3EE & Paper #FAFAF8)
          ================================================================= -->
     <section id="invitation" class="section section-light">
       <div class="container">
@@ -278,7 +296,7 @@
         </div>
 
         <div class="dossier-layout">
-          <!-- Formal Invitation Letter on #FAFAF8 Paper -->
+          <!-- Surat Undangan Formal di atas latar kertas #FAFAF8 -->
           <article class="formal-letter" aria-label="Surat Undangan Resmi">
             <div class="letter-masthead">
               <div>
@@ -307,6 +325,7 @@
               </p>
             </div>
 
+            <!-- Grid rincian informasi utama acara -->
             <div class="letter-specs-grid">
               <div class="letter-spec">
                 <span class="spec-label">AGENDA UTAMA</span>
@@ -347,15 +366,15 @@
             </div>
           </article>
 
-          <!-- Digital Race Pass Credential Card -->
+          <!-- Kartu Kredensial Digital Race Pass (lengkap dengan kode & barcode SVG deterministik) -->
           <aside class="pass-column" aria-label="Kartu Digital Race Pass">
             <div class="race-pass-card" id="digitalRacePass" data-tier="vip">
-              <!-- Lanyard Slot Top -->
+              <!-- Lubang gantungan lanyard di bagian atas kartu -->
               <div class="pass-lanyard-bar" aria-hidden="true">
                 <span class="lanyard-slot"></span>
               </div>
 
-              <!-- Pass Ribbon Header -->
+              <!-- Pita tajuk pass (warna berubah sesuai kategori VIP / Hospitality / Grandstand) -->
               <div class="pass-ribbon">
                 <div class="pass-ribbon-left">
                   <span class="pass-f1-kicker mono">FORMULA 1 // ROUND 22</span>
@@ -364,9 +383,9 @@
                 <span class="pass-tier-pill" id="passTierBadge">PADDOCK CLUB VIP</span>
               </div>
 
-              <!-- Pass Body -->
+              <!-- Isi biodata pemegang pass -->
               <div class="pass-body">
-                <!-- Subtle Circuit Silhouette Watermark -->
+                <!-- Watermark siluet lintasan Lusail transparan -->
                 <svg class="pass-watermark" viewBox="0 0 260 180" aria-hidden="true">
                   <path d="M44,142 L205,142 C222,142 228,125 215,112 L175,88 C164,81 168,66 182,62 L212,54 C226,50 225,32 208,28 L145,22 C130,21 124,35 132,46 L146,66 C152,75 140,86 129,78 L104,56 C92,46 76,54 80,69 L92,102 C95,112 82,120 73,112 L52,92 C40,82 24,92 28,108 L34,132 C36,139 40,142 44,142 Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" />
                 </svg>
@@ -397,14 +416,14 @@
                 </div>
               </div>
 
-              <!-- Perforated Divider -->
+              <!-- Garis sobekan tiket dengan lekukan kiri-kanan -->
               <div class="pass-perforation" aria-hidden="true">
                 <span class="notch notch-left"></span>
                 <span class="perforation-line"></span>
                 <span class="notch notch-right"></span>
               </div>
 
-              <!-- Deterministic Pass Code & Barcode -->
+              <!-- Area Kode Pass Deterministik & Barcode SVG -->
               <div class="pass-barcode-zone">
                 <div class="barcode-meta-row">
                   <span class="barcode-label mono">PASS ID DETERMINISTIK</span>
@@ -417,7 +436,7 @@
               </div>
             </div>
 
-            <!-- Pass Actions -->
+            <!-- Tombol utilitas kartu: Salin Kode Pass & Cetak Pass -->
             <div class="pass-utility-actions">
               <button type="button" id="btnCopyPassCode" class="btn btn-carbon btn-block">
                 <i data-lucide="copy"></i>
@@ -434,8 +453,7 @@
     </section>
 
     <!-- =================================================================
-         SECTION 02 — OFFICIAL SCHEDULE IN WIB (UTC+7) + AST TOGGLE & ICS
-         (Carbon #0B0C0E & Tarmac #14161A)
+         BAGIAN 02 — JADWAL RESMI DALAM FORMAT WIB (UTC+7), TOGGLE AST & .ICS
          ================================================================= -->
     <section id="schedule" class="section section-dark">
       <div class="container">
@@ -447,9 +465,8 @@
           </div>
         </div>
 
-        <!-- Schedule Controls Bar -->
+        <!-- Bar Kontrol Jadwal: Filter Hari + Toggle AST + Unduh Semua .ics -->
         <div class="schedule-controls">
-          <!-- Day Filter Tabs -->
           <div class="day-filter-group" role="tablist" aria-label="Filter Hari Sesi">
             <button type="button" class="day-filter-btn active" data-day="all" role="tab" aria-selected="true">
               <span>Semua</span>
@@ -469,7 +486,6 @@
             </button>
           </div>
 
-          <!-- Right Actions: AST Reference Toggle & Download All .ics -->
           <div class="schedule-utility-group">
             <button type="button" id="btnToggleAst" class="ast-toggle-btn active" aria-pressed="true">
               <i data-lucide="globe"></i>
@@ -482,9 +498,9 @@
           </div>
         </div>
 
-        <!-- Schedule Cards Container -->
+        <!-- Wadah daftar kartu sesi FP1 hingga Race (diisi dinamis oleh app.js) -->
         <div id="scheduleCardsContainer" class="schedule-list" aria-live="polite">
-          <!-- Populated dynamically by js/app.js -->
+          <!-- Diisi otomatis oleh js/app.js -->
         </div>
 
         <div class="schedule-footnote">
@@ -495,8 +511,7 @@
     </section>
 
     <!-- =================================================================
-         SECTION 03 — CIRCUIT PROFILE, ICONIC SECTORS & LEAFLET MAP
-         (Warm Stone #F4F3EE & Paper #FAFAF8)
+         BAGIAN 03 — PROFIL SIRKUIT LUSAIL, SEKTOR IKONIK & PETA LEAFLET
          ================================================================= -->
     <section id="circuit" class="section section-light">
       <div class="container">
@@ -508,7 +523,7 @@
           </div>
         </div>
 
-        <!-- 5 Official Circuit Specification Cards -->
+        <!-- 5 Kartu Spesifikasi Teknis Resmi Sirkuit -->
         <div class="circuit-specs-strip">
           <div class="circuit-metric-card">
             <span class="metric-kicker">PANJANG LINTASAN</span>
@@ -688,7 +703,9 @@
     </section>
 
     <!-- =================================================================
-         SECTION 04 — GALERI FOTO ESTETIS & CAROUSEL (Rubric #4)
+         BAGIAN 04 — GALERI FOTO DOKUMENTASI & CAROUSEL
+         Menampilkan 6 foto resolusi tinggi dengan mode Bento Grid / Carousel
+         serta animasi muncul saat halaman digulir (scroll reveal).
          ================================================================= -->
     <section id="gallery" class="section section-gallery">
       <div class="container">
@@ -1088,7 +1105,7 @@
   </main>
 
   <!-- =================================================================
-       FOOTER WITH DISCREET ADMIN ENTRY ("Akses Penyelenggara" + Ctrl+Shift+A)
+       FOOTER HALAMAN & TOMBOL AKSES PANEL ADMIN (Shortcut: Ctrl+Shift+A)
        ================================================================= -->
   <footer class="site-footer">
     <div class="kerb-stripe" aria-hidden="true"></div>
@@ -1111,7 +1128,7 @@
   </footer>
 
   <!-- =================================================================
-       MODAL 1: ADMIN PIN PROTECTION MODAL
+       MODAL 1: GERBANG KEAMANAN PIN ADMIN (PIN bawaan: 291126)
        ================================================================= -->
   <div id="pinModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="pinModalTitle">
     <div class="modal-dialog modal-sm">
@@ -1153,7 +1170,7 @@
   </div>
 
   <!-- =================================================================
-       MODAL 2: FULL ORGANIZER ADMIN PANEL (3 TABS)
+       MODAL 2: PANEL ADMIN PENYELENGGARA (3 TAB KELOLA TAMU, JADWAL, HOSTING)
        ================================================================= -->
   <div id="adminModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle">
     <div class="modal-dialog modal-xl">
@@ -1575,7 +1592,7 @@
   </div>
 
   <!-- =================================================================
-       MODAL 3: CUSTOM CONFIRMATION DIALOG (Replaces window.confirm)
+       MODAL 3: DIALOG KONFIRMASI KUSTOM (Pengganti confirm() bawaan browser)
        ================================================================= -->
   <div id="confirmModal" class="modal-backdrop hidden" role="alertdialog" aria-modal="true" aria-labelledby="confirmModalTitle" aria-describedby="confirmModalMessage">
     <div class="modal-dialog modal-sm">
@@ -1596,7 +1613,7 @@
   </div>
 
   <!-- =================================================================
-       MODAL 4: GALLERY LIGHTBOX VIEWER
+       MODAL 4: LIGHTBOX GALERI FOTO (Pratinjau foto ukuran penuh)
        ================================================================= -->
   <div id="galleryLightboxModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="lightboxCaptionTitle">
     <div class="lightbox-dialog">
@@ -1622,7 +1639,7 @@
     </div>
   </div>
 
-  <!-- Background Audio Element (F1 Theme) & Floating Paddock Audio Toggle -->
+  <!-- Elemen Audio Latar (lagu/f1 theme.mp3) & Tombol Melayang di Pojok Kiri Bawah -->
   <audio id="bgAudio" src="lagu/f1%20theme.mp3" loop preload="auto"></audio>
 
   <div class="floating-audio-dock" id="floatingAudioDock">
@@ -1634,6 +1651,7 @@
         <span class="audio-kicker mono">F1 OFFICIAL THEME</span>
         <span class="audio-state-label" id="floatingAudioLabel">Aktifkan Lagu</span>
       </span>
+      <!-- Indikator animasi equalizer 4 batang saat lagu aktif -->
       <span class="eq-bars" aria-hidden="true">
         <span class="eq-bar"></span>
         <span class="eq-bar"></span>
@@ -1643,15 +1661,15 @@
     </button>
   </div>
 
-  <!-- Toast Notification Stack (Replaces window.alert) -->
+  <!-- Wadah Notifikasi Toast Melayang (pengganti alert() bawaan browser) -->
   <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="false"></div>
 
-  <!-- External Libraries: Lucide Icons, Leaflet 1.9.4 & Supabase JS v2 -->
+  <!-- Pustaka Eksternal CDN: Ikon Lucide, Peta Leaflet 1.9.4, dan SDK Supabase v2 -->
   <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- Application Script -->
+  <!-- Skrip Logika Utama Aplikasi -->
   <script src="js/app.js"></script>
 </body>
 </html>

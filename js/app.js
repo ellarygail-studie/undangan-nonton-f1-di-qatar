@@ -1,21 +1,23 @@
 /* ==========================================================================
-   FORMULA 1 QATAR AIRWAYS QATAR GRAND PRIX 2026 — APPLICATION LOGIC
-   Features:
-   - Live WIB Clock & Real-Time Session Countdown (Auto + Manual Target)
-   - URL Personalization (?to, role, pass, tribun + Admin Schedule Overrides)
-   - Deterministic Pass ID & High-Density SVG Code-128 Style Barcode
-   - WIB Schedule with AST (UTC+3) Toggle, Day Filter & .ics Downloads
-   - Lusail Circuit Interactive SVG Sector Explorer & Leaflet Map (Street/Topo)
-   - Interactive Guest RSVP stored in localStorage
-   - PIN-Protected Organizer Admin Panel (Ctrl+Shift+A / Footer Button)
-   - Zero native alert()/confirm() — Custom Modals & Toast Notifications
+   FORMULA 1 QATAR AIRWAYS QATAR GRAND PRIX 2026 — LOGIKA UTAMA APLIKASI
+   Daftar Modul:
+   1. Konstanta Penyimpanan, Kredensial Supabase & Jadwal Resmi FIA (WIB)
+   2. Utilitas: localStorage Aman, Sanitasi HTML, Hashing FNV-1a & Barcode SVG
+   3. Notifikasi Toast & Modal Konfirmasi Kustom (tanpa alert/confirm bawaan)
+   4. Personalisasi URL (?to=...) & Pembangun Link Undangan + Pesan WhatsApp
+   5. Jam WIB Real-Time & Hitung Mundur Sesi Otomatis/Manual
+   6. Jadwal WIB dengan Toggle Waktu Qatar (AST) & Unduhan Kalender .ics
+   7. Peta Interaktif Leaflet (25.49, 51.45417) & Eksplorasi Sektor Sirkuit
+   8. Koneksi Supabase Cloud + Realtime RSVP & Buku Tamu Publik
+   9. Panel Admin Terproteksi PIN (291126): Kelola Tamu, Jadwal, & Backup JSON
+   10. Sampul Pembuka, Kontroler Lagu F1, Galeri Bento/Carousel & Animasi Scroll
    ========================================================================== */
 
 (function () {
   'use strict';
 
   /* ------------------------------------------------------------------------
-     STORAGE KEYS & FACTORY DEFAULTS
+     1. KUNCI PENYIMPANAN LOCALSTORAGE & DATA BAWAAN RESMI (FACTORY DEFAULTS)
      ------------------------------------------------------------------------ */
   const STORAGE_KEYS = {
     PIN: 'f1_qatar2026_admin_pin',
@@ -26,14 +28,16 @@
     AUDIO: 'f1_qatar2026_audio_enabled'
   };
 
+  /* PIN bawaan untuk membuka Panel Admin Penyelenggara */
   const DEFAULT_PIN = '291126';
 
-  /* Masukkan Project URL & Anon Key Supabase di sini agar aktif otomatis di semua perangkat */
+  /* Project URL & Publishable Key Supabase agar koneksi database aktif otomatis di semua perangkat */
   const DEFAULT_SUPABASE = {
     url: 'https://iibkptqxqwtuiekjpftn.supabase.co',
     anonKey: 'sb_publishable_xFZqbBmsib-VqlQqTMk7eg_A_YyWCDg'
   };
 
+  /* Pengaturan default acara jika belum diubah oleh Admin */
   const FACTORY_CONFIG = {
     title: 'Formula 1 Qatar Airways Qatar Grand Prix 2026',
     host: 'Paddock Club Indonesia & Lusail Motorsport Hospitality',
@@ -44,6 +48,7 @@
     supabaseAnonKey: 'sb_publishable_xFZqbBmsib-VqlQqTMk7eg_A_YyWCDg'
   };
 
+  /* Profil tamu bawaan saat link dibuka tanpa parameter URL (?to=...) */
   const DEFAULT_GUEST = {
     name: 'Tamu Undangan VIP',
     role: 'Tamu Kehormatan Paddock & Komunitas Motorsport',
@@ -51,6 +56,7 @@
     tribun: ''
   };
 
+  /* Jadwal resmi 5 sesi Formula 1 Qatar GP 2026 dalam format WIB (UTC+7) */
   const FACTORY_SESSIONS = [
     {
       id: 'fp1',
@@ -149,7 +155,7 @@
   const ID_DAYS = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
 
   /* ------------------------------------------------------------------------
-     APPLICATION STATE
+     STATE GLOBAL APLIKASI (Menyimpan kondisi tampilan dan data aktif di memori)
      ------------------------------------------------------------------------ */
   const state = {
     adminUnlocked: false,
@@ -173,8 +179,9 @@
   };
 
   /* ------------------------------------------------------------------------
-     UTILITIES: SAFE STORAGE, ESCAPING, HASHING & TIME CONVERSION
+     2. UTILITAS: PENYIMPANAN LOKAL, SANITASI XSS, HASH PASS & KONVERSI WAKTU
      ------------------------------------------------------------------------ */
+  /* Membaca data JSON dari localStorage dengan aman (kembali ke fallback jika gagal) */
   function readStorageJson(key, fallback) {
     try {
       const raw = window.localStorage.getItem(key);
@@ -186,6 +193,7 @@
     }
   }
 
+  /* Menyimpan objek/array JavaScript sebagai teks JSON ke localStorage */
   function writeStorageJson(key, value) {
     try {
       window.localStorage.setItem(key, JSON.stringify(value));
@@ -210,6 +218,7 @@
     }
   }
 
+  /* Mengamankan teks input pengguna agar tidak dapat menyisipkan tag HTML berbahaya (anti-XSS) */
   function escapeHtml(str) {
     return String(str ?? '')
       .replace(/&/g, '&amp;')
@@ -234,8 +243,9 @@
   }
 
   /**
-   * Computes exact UTC start & end timestamps + AST (UTC+3) formatted strings
-   * from a session's WIB base date (YYYY-MM-DD) and WIB start/end HH:MM.
+   * Menghitung timestamp UTC mulai/selesai sesi dan mengonversi jam WIB (UTC+7)
+   * ke waktu lokal sirkuit Lusail, Qatar yaitu AST (UTC+3), termasuk penyesuaian hari
+   * jika sesi dini hari WIB jatuh pada malam sebelumnya di Qatar.
    */
   function getSessionTiming(session) {
     const startMs = Date.parse(`${session.dateIso}T${session.startWib}:00+07:00`);
@@ -270,7 +280,8 @@
   }
 
   /**
-   * Deterministic FNV-1a 32-bit hash for Pass Code & SVG Barcode
+   * Algoritma hash FNV-1a 32-bit untuk menghasilkan kode Digital Race Pass
+   * secara deterministik (data tamu yang sama selalu menghasilkan kode pass yang sama).
    */
   function hashFnv1a(input) {
     let hash = 0x811c9dc5;
@@ -312,7 +323,7 @@
   }
 
   /**
-   * Renders a crisp deterministic high-density barcode into an <svg> element
+   * Menggambar barcode vektor SVG beresolusi tajam berdasarkan kode pass tamu.
    */
   function renderBarcodeSvg(svgEl, codeText) {
     if (!svgEl) return;
@@ -360,8 +371,9 @@
   }
 
   /* ------------------------------------------------------------------------
-     CUSTOM TOAST & CONFIRMATION MODAL (No window.alert / window.confirm)
+     3. NOTIFIKASI TOAST & MODAL KONFIRMASI KUSTOM (Pengganti alert/confirm bawaan)
      ------------------------------------------------------------------------ */
+  /* Menampilkan notifikasi melayang di pojok layar yang hilang otomatis setelah 4,2 detik */
   function showToast(type, title, message) {
     const container = document.getElementById('toastContainer');
     if (!container) return;
@@ -399,6 +411,7 @@
     window.setTimeout(dismiss, 4200);
   }
 
+  /* Menampilkan dialog konfirmasi berbasis Promise (pengganti window.confirm) */
   function showConfirmModal(title, message, confirmLabel = 'Lanjutkan') {
     return new Promise((resolve) => {
       const modal = document.getElementById('confirmModal');
@@ -427,6 +440,7 @@
     });
   }
 
+  /* Menyalin teks ke clipboard menggunakan Clipboard API modern dengan fallback textarea */
   async function copyTextToClipboard(text, successTitle, successMessage) {
     try {
       if (navigator.clipboard && window.isSecureContext) {
@@ -449,7 +463,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     INITIALIZE STATE FROM LOCALSTORAGE + URL OVERRIDES
+     4. MEMUAT DATA AWAL DARI LOCALSTORAGE & PARAMETER OVERRIDE URL
      ------------------------------------------------------------------------ */
   function loadState() {
     // 1. Load Event Config
@@ -501,7 +515,8 @@
   }
 
   /**
-   * Resolves the currently displayed guest profile (Preview Guest > URL Params > Default VIP)
+   * Menentukan profil tamu yang aktif ditampilkan berdasarkan urutan prioritas:
+   * Mode Pratinjau Admin > Parameter URL (?to=...) > Default "Tamu Undangan VIP".
    */
   function getActiveGuestProfile() {
     if (state.previewGuest) {
@@ -530,7 +545,9 @@
   }
 
   /* ------------------------------------------------------------------------
-     PERSONALIZED URL BUILDER (SYNCS ADMIN SCHEDULE & EVENT OVERRIDES)
+     5. PEMBUAT TAUTAN UNDANGAN PERSONAL & TEMPLATE PESAN WHATSAPP
+     Menyisipkan data tamu (?to, role, pass, tribun) sekaligus menyinkronkan
+     perubahan jam WIB / detail acara yang diedit oleh Admin.
      ------------------------------------------------------------------------ */
   function getEffectiveBaseUrl() {
     const custom = (state.config.baseUrl || '').trim();
@@ -607,7 +624,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     RENDER GUEST PAGE: HERO, FORMAL LETTER & DIGITAL RACE PASS
+     6. RENDER DATA TAMU KE SAMPUL, HERO, SURAT RESMI & DIGITAL RACE PASS
      ------------------------------------------------------------------------ */
   function renderPersonalizationAndEventDetails() {
     const guest = getActiveGuestProfile();
@@ -693,8 +710,9 @@
   }
 
   /* ------------------------------------------------------------------------
-     LIVE WIB CLOCK & REAL-TIME COUNTDOWN ENGINE
+     7. MESIN JAM WIB REAL-TIME & HITUNG MUNDUR SESI BALAP
      ------------------------------------------------------------------------ */
+  /* Menentukan sesi target (otomatis mendeteksi sesi yang sedang live / terdekat) */
   function resolveCountdownTarget(nowMs) {
     if (state.countdownTargetMode !== 'auto') {
       const chosen = state.sessions.find((s) => s.id === state.countdownTargetMode) || state.sessions[0];
@@ -815,7 +833,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     OFFICIAL WIB SCHEDULE CARDS, AST TOGGLE & .ICS CALENDAR EXPORT
+     8. RENDER KARTU JADWAL WIB, TOGGLE AST & GENERATOR FILE KALENDER .ICS
      ------------------------------------------------------------------------ */
   function renderScheduleSection() {
     const container = document.getElementById('scheduleCardsContainer');
@@ -908,6 +926,7 @@
       .replace(/\r?\n/g, '\\n');
   }
 
+  /* Membuat dan mengunduh file kalender standar RFC 5545 (.ics) untuk satu atau semua sesi */
   function downloadIcsForSessions(sessionList, filename) {
     const guest = getActiveGuestProfile();
     const passCode = generateDeterministicPassCode(guest);
@@ -966,8 +985,9 @@
   }
 
   /* ------------------------------------------------------------------------
-     CIRCUIT SECTOR INTERACTION & LEAFLET MAP (25.49, 51.45417)
+     9. INTERAKSI SEKTOR SIRKUIT LUSAIL & PETA INTERAKTIF LEAFLET
      ------------------------------------------------------------------------ */
+  /* Menyorot jalur Sektor 1, 2, atau 3 pada diagram vektor SVG sirkuit Lusail */
   function setSectorHighlight(sectorId) {
     state.activeSector = sectorId;
     const svg = document.getElementById('lusailTrackSvg');
@@ -997,6 +1017,7 @@
     }
   }
 
+  /* Menginisialisasi peta Leaflet pada koordinat 25.49, 51.45417 dengan layer Jalan & Topografi */
   function initLeafletCircuitMap() {
     const mapEl = document.getElementById('circuitMap');
     if (!mapEl || typeof window.L === 'undefined') return;
@@ -1096,8 +1117,9 @@
   }
 
   /* ------------------------------------------------------------------------
-     SUPABASE CLOUD DATABASE & REALTIME RSVP ENGINE
+     10. INTEGRASI DATABASE ONLINE SUPABASE & REALTIME RSVP
      ------------------------------------------------------------------------ */
+  /* Script SQL cadangan agar dapat langsung disalin dari tombol di Panel Admin */
   const SUPABASE_SCHEMA_SQL = [
     'create table if not exists public.rsvps (',
     '  id uuid primary key default gen_random_uuid(),',
@@ -1176,6 +1198,7 @@
     };
   }
 
+  /* Mengambil daftar seluruh RSVP terbaru dari tabel public.rsvps di Supabase */
   async function fetchCloudRsvps(silent = true) {
     if (!state.supabase) return false;
     try {
@@ -1210,6 +1233,7 @@
     }
   }
 
+  /* Membuka koneksi client Supabase dan mengaktifkan listener Realtime untuk pembaruan otomatis */
   async function initSupabaseConnection(showFeedback = false) {
     if (state.supabase && state.supabaseChannel && typeof state.supabase.removeChannel === 'function') {
       try {
@@ -1261,7 +1285,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     GUEST RSVP MANAGEMENT (SUPABASE CLOUD + LOCALSTORAGE FALLBACK)
+     11. MANAJEMEN RSVP TAMU, KARTU BUKTI & BUKU TAMU PUBLIK
      ------------------------------------------------------------------------ */
   function renderPublicRsvpCounters() {
     const total = state.rsvps.length;
@@ -1274,6 +1298,7 @@
     renderPublicGuestbook();
   }
 
+  /* Merender daftar kartu ucapan dan konfirmasi di Buku Tamu Paddock secara dinamis */
   function renderPublicGuestbook() {
     const listEl = document.getElementById('publicGuestbookList');
     const badgeEl = document.getElementById('guestbookCountBadge');
@@ -1497,7 +1522,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     ADMIN PANEL: PIN PROTECTION, 3 TABS, GUEST LINKS, SCHEDULE & BACKUP
+     12. PANEL ADMIN PENYELENGGARA: VERIFIKASI PIN, 3 TAB, EKSPOR CSV & BACKUP
      ------------------------------------------------------------------------ */
   function openModal(modalId) {
     const el = document.getElementById(modalId);
@@ -1816,7 +1841,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     BIND ALL DOM EVENTS
+     13. PENDAFTARAN EVENT LISTENER UTAMA (NAVIGASI, JADWAL, ADMIN & BACKUP)
      ------------------------------------------------------------------------ */
   function bindEvents() {
     // Mobile Menu Toggle
@@ -2407,7 +2432,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     BACKGROUND AUDIO PLAYER (lagu/f1 theme.mp3)
+     14. KONTROLER AUDIO LATAR (lagu/f1 theme.mp3) & SINKRONISASI DUA TOMBOL
      ------------------------------------------------------------------------ */
   function updateAudioUi(isPlaying) {
     state.audioPlaying = Boolean(isPlaying);
@@ -2539,8 +2564,9 @@
   }
 
   /* ------------------------------------------------------------------------
-     HERO COVER GATE, PHOTO GALLERY, LIGHTBOX & SCROLL REVEAL ANIMATIONS
+     15. SAMPUL PEMBUKA, GALERI FOTO (BENTO/CAROUSEL/LIGHTBOX) & SCROLL ANIMATION
      ------------------------------------------------------------------------ */
+  /* Daftar 6 foto galeri lokal beserta judul dan keterangan editorial */
   const GALLERY_ITEMS = [
     {
       src: 'img/gallery/lusail-floodlit-straight.jpg',
@@ -2574,6 +2600,7 @@
     }
   ];
 
+  /* Mengatur sampul pembuka: animasi tirai naik & otomatis memutar musik saat tombol diklik */
   function initCoverGate() {
     const cover = document.getElementById('invitationCover');
     const openBtn = document.getElementById('btnOpenInvitation');
@@ -2621,6 +2648,7 @@
     });
   }
 
+  /* Mengatur perpindahan mode Bento Grid / Carousel, kontrol Lightbox foto, dan tombol salin info */
   function initGalleryAndLightbox() {
     const viewport = document.getElementById('galleryViewport');
     const track = document.getElementById('galleryTrack');
@@ -2740,6 +2768,7 @@
     });
   }
 
+  /* Mengamati elemen saat masuk ke layar (IntersectionObserver) untuk animasi scroll bertingkat */
   function initScrollRevealAnimations() {
     if (typeof window.IntersectionObserver !== 'function') return;
 
@@ -2797,7 +2826,7 @@
   }
 
   /* ------------------------------------------------------------------------
-     BOOT APPLICATION
+     16. INISIALISASI BOOT APLIKASI SAAT HALAMAN SELESAI DIMUAT
      ------------------------------------------------------------------------ */
   function initApp() {
     loadState();

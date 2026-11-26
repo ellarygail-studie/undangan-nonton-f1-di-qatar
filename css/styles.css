@@ -1,13 +1,10 @@
 /* ==========================================================================
-   FORMULA 1 QATAR AIRWAYS QATAR GRAND PRIX 2026 — OFFICIAL INVITATION
-   Design Language: Motorsport Editorial / High-Contrast Paddock
-   Palette: Carbon (#0B0C0E), Tarmac (#14161A), Warm Stone (#F4F3EE),
-            Paper (#FAFAF8), Vermilion Red (#D91E18), Qatar Maroon (#8A1538),
-            Kerb Gold (#D4A017)
+   SISTEM DESAIN UTAMA: MOTORSPORT EDITORIAL / HIGH-CONTRAST PADDOCK
+   Mendefinisikan variabel palet warna resmi, font, dan token tata letak global.
    ========================================================================== */
 
 :root {
-  /* Official Required Palette */
+  /* 7 Warna Wajib Motorsport Editorial */
   --carbon: #0B0C0E;
   --tarmac: #14161A;
   --warm-stone: #F4F3EE;
@@ -16,7 +13,7 @@
   --qatar-maroon: #8A1538;
   --kerb-gold: #D4A017;
 
-  /* Derived Surface & Structural Tokens */
+  /* Warna Turunan untuk Permukaan, Teks, dan Garis Pembatas */
   --tarmac-elevated: #1B1E24;
   --tarmac-hover: #22262E;
   --stone-muted: #E6E4DC;
@@ -32,12 +29,12 @@
   --border-light: rgba(11, 12, 14, 0.13);
   --border-light-strong: rgba(11, 12, 14, 0.28);
 
-  /* Typography */
+  /* Pasangan Tipografi: Oswald (Judul), Inter (Isi), JetBrains Mono (Angka/Jam) */
   --font-display: 'Oswald', 'Arial Narrow', sans-serif;
   --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono: 'JetBrains Mono', 'Consolas', monospace;
 
-  /* Spacing & Geometry */
+  /* Ukuran Kontainer, Radius Sudut, dan Bayangan */
   --container-max: 1240px;
   --radius-xs: 2px;
   --radius-sm: 4px;
@@ -46,7 +43,7 @@
   --shadow-paddock: 0 20px 48px rgba(0, 0, 0, 0.48);
 }
 
-/* Reset & Base */
+/* Reset Dasar & Pencegahan Overflow Horizontal pada Semua Ukuran Layar */
 *,
 *::before,
 *::after {
@@ -128,7 +125,9 @@ svg.lucide {
 }
 
 /* ==========================================================================
-   HERO COVER / SAMPUL PEMBUKA UNDANGAN & SCROLL REVEAL ANIMATIONS
+   SAMPUL PEMBUKA UNDANGAN (HERO COVER) & ANIMASI SCROLL REVEAL
+   Mengatur layar sampul penuh dengan efek tirai naik saat tombol diklik
+   serta transisi kemunculan elemen ketika halaman digulir.
    ========================================================================== */
 .invitation-cover {
   position: fixed;
@@ -275,7 +274,7 @@ svg.lucide {
   color: var(--text-light-muted);
 }
 
-/* Scroll Reveal Progressive Animations */
+/* Animasi Scroll Reveal: elemen tersembunyi lalu muncul halus saat masuk viewport */
 body.scroll-anim-ready .reveal-on-scroll {
   opacity: 0;
   transform: translateY(26px);
@@ -311,7 +310,9 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
 }
 
 /* ==========================================================================
-   SECTION 04: GALERI FOTO BENTO GRID, CAROUSEL & LIGHTBOX
+   BAGIAN 04: GALERI FOTO BENTO GRID, CAROUSEL & LIGHTBOX
+   Mendukung tampilan grid asimetris 12 kolom (Bento), mode geser horizontal
+   (Carousel dengan scroll-snap), serta pratinjau penuh (Lightbox).
    ========================================================================== */
 .section-gallery {
   background: linear-gradient(180deg, var(--tarmac) 0%, #0E1014 100%);
@@ -575,7 +576,8 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
 }
 
 /* ==========================================================================
-   COPY ACCOUNT/ADDRESS CARD & PUBLIC GUESTBOOK FEED
+   KARTU SALIN REKENING/ALAMAT & DAFTAR BUKU TAMU PUBLIK
+   Menampilkan kartu salin data sekali klik serta grid feed ucapan tamu.
    ========================================================================== */
 .copy-info-card {
   background: var(--tarmac);
@@ -714,7 +716,7 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
 }
 
 /* ==========================================================================
-   KERB STRIPE & STICKY PREVIEW BANNER
+   BAR KERB SIRKUIT & BANNER PRATINJAU MODE ADMIN
    ========================================================================== */
 .kerb-stripe {
   height: 5px;
@@ -772,7 +774,7 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
 }
 
 /* ==========================================================================
-   HEADER, TELEMETRY BAR & NAVIGATION
+   HEADER, BAR TELEMETRI WAKTU & NAVIGASI UTAMA (STICKY)
    ========================================================================== */
 .site-header {
   position: sticky;
@@ -1049,7 +1051,7 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
 }
 
 /* ==========================================================================
-   HERO SECTION (HIGH-CONTRAST PADDOCK)
+   BAGIAN HERO (KARTU TAMU VIP & MENARA HITUNG MUNDUR)
    ========================================================================== */
 .hero-section {
   position: relative;
@@ -1430,7 +1432,7 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
 }
 
 /* ==========================================================================
-   SHARED EDITORIAL SECTIONS (WARM STONE / PAPER vs CARBON / TARMAC)
+   SEKSI EDITORIAL BERSILANG (WARM STONE / PAPER TERANG vs CARBON / TARMAC GELAP)
    ========================================================================== */
 .section {
   padding: 76px 0;
@@ -1496,7 +1498,7 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
 }
 
 /* ==========================================================================
-   SECTION 01: FORMAL INVITATION LETTER & DIGITAL RACE PASS
+   BAGIAN 01: SURAT UNDANGAN FORMAL & KARTU DIGITAL RACE PASS
    ========================================================================== */
 .dossier-layout {
   display: grid;
@@ -1899,7 +1901,7 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
 }
 
 /* ==========================================================================
-   SECTION 02: SCHEDULE IN WIB (UTC+7) + AST TOGGLE + ICS
+   BAGIAN 02: JADWAL RESMI WIB (UTC+7), TOGGLE AST & TOMBOL .ICS
    ========================================================================== */
 .schedule-controls {
   display: flex;
@@ -2115,7 +2117,7 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
 }
 
 /* ==========================================================================
-   SECTION 03: CIRCUIT PROFILE, SVG SECTORS & LEAFLET MAP
+   BAGIAN 03: PROFIL SIRKUIT, SEKTOR SVG INTERAKTIF & PETA LEAFLET
    ========================================================================== */
 .circuit-specs-strip {
   display: grid;
@@ -2449,7 +2451,7 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
 }
 
 /* ==========================================================================
-   SECTION 04: GUEST RSVP FORM & SIDEBAR
+   BAGIAN 05: FORMULIR RSVP TAMU, KARTU BUKTI & STATUS KONEKSI SUPABASE
    ========================================================================== */
 .rsvp-layout {
   display: grid;
@@ -2840,7 +2842,7 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
 }
 
 /* ==========================================================================
-   FOOTER & DISCREET ADMIN BUTTON
+   FOOTER & TOMBOL MASUK PANEL ADMIN PENYELENGGARA
    ========================================================================== */
 .site-footer {
   background: #070809;
@@ -2900,7 +2902,7 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
 }
 
 /* ==========================================================================
-   MODALS (PIN, FULL ADMIN PANEL, CUSTOM CONFIRMATION)
+   MODAL SISTEM: VERIFIKASI PIN, PANEL ADMIN 3 TAB & KONFIRMASI KUSTOM
    ========================================================================== */
 .modal-backdrop {
   position: fixed;
@@ -3403,7 +3405,7 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
 }
 
 /* ==========================================================================
-   PADDOCK AUDIO CONTROLLER (NAVBAR BUTTON & FLOATING EQUALIZER DOCK)
+   KONTROLER AUDIO LATAR (TOMBOL NAVBAR & DOCK MELAYANG EQUALIZER)
    ========================================================================== */
 .nav-audio-btn {
   display: inline-flex;
@@ -3544,7 +3546,7 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
 }
 
 /* ==========================================================================
-   CUSTOM TOAST NOTIFICATIONS
+   NOTIFIKASI TOAST MELAYANG (PENGGANTI ALERT BAWAAN BROWSER)
    ========================================================================== */
 .toast-container {
   position: fixed;
@@ -3606,7 +3608,8 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
 }
 
 /* ==========================================================================
-   RESPONSIVE BREAKPOINTS (DESKTOP, TABLET 768px-1024px & MOBILE 360px-414px)
+   ATURAN RESPONSIF (DESKTOP, TABLET 768px-1024px & SMARTPHONE 360px-414px)
+   Menggunakan min-width: 0 pada anak grid/flex untuk mencegah overflow horizontal.
    ========================================================================== */
 .hero-layout > *,
 .dossier-layout > *,
@@ -3618,7 +3621,7 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
   min-width: 0;
 }
 
-/* Tablet Landscape & Compact Desktop (max-width: 1080px) */
+/* Tablet Landscape & Desktop Kompak (lebar layar maksimal 1080px) */
 @media (max-width: 1080px) {
   .hero-layout,
   .dossier-layout,
@@ -3628,14 +3631,14 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
     grid-template-columns: 1fr;
   }
 
-  /* Keep Digital Race Pass credential card well-proportioned & centered on Tablet */
+  /* Menjaga proporsi kartu Digital Race Pass tetap rapi dan terpusat di layar Tablet */
   .pass-column {
     max-width: 480px;
     width: 100%;
     margin: 0 auto;
   }
 
-  /* Balanced 6-col math for 5 circuit metric cards on Tablet (3 top + 2 bottom) */
+  /* Grid 6 kolom untuk 5 kartu metrik sirkuit di Tablet (3 kartu atas + 2 kartu bawah seimbang) */
   .circuit-specs-strip {
     grid-template-columns: repeat(6, minmax(0, 1fr));
   }
@@ -3651,7 +3654,7 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
     grid-column: span 3;
   }
 
-  /* Tablet 2-column Bento Gallery (6 items = 3 balanced rows) */
+  /* Galeri Bento menjadi 2 kolom seimbang di Tablet (6 foto = 3 baris penuh) */
   .gallery-bento-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
@@ -3663,7 +3666,7 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
     grid-column: span 1;
   }
 
-  /* Tablet Schedule Card keeps action button neatly aligned */
+  /* Kartu jadwal di Tablet menjaga tombol Unduh .ics tetap sejajar di sisi kanan */
   .schedule-card {
     grid-template-columns: 108px minmax(0, 1fr) auto;
   }
@@ -3685,7 +3688,7 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
   }
 }
 
-/* Tablet Portrait & Navigation Drawer Trigger (max-width: 960px) */
+/* Tablet Potret & Aktivasi Menu Drawer (lebar layar maksimal 960px) */
 @media (max-width: 960px) {
   .telemetry-venue,
   .telemetry-coords,
@@ -3740,7 +3743,7 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
   }
 }
 
-/* Smartphone Standard & Small Mobile-First (360px - 600px) */
+/* Smartphone Standar & Layar Kecil (360px - 600px) */
 @media (max-width: 600px) {
   .container {
     padding: 0 15px;
@@ -3878,7 +3881,8 @@ body.scroll-anim-ready .reveal-on-scroll.is-visible {
 }
 
 /* ==========================================================================
-   PRINT STYLESHEET (FOR DIGITAL RACE PASS & OFFICIAL LETTER)
+   STYLESHEET CETAK KERTAS / PDF (KHUSUS SURAT UNDANGAN & DIGITAL RACE PASS)
+   Menyembunyikan elemen navigasi/tombol agar hasil print bersih dan rapi.
    ========================================================================== */
 @media print {
   .invitation-cover,
