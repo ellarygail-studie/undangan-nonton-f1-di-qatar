@@ -30,8 +30,8 @@
 
   /* Masukkan Project URL & Anon Key Supabase di sini agar aktif otomatis di semua perangkat */
   const DEFAULT_SUPABASE = {
-    url: '',
-    anonKey: ''
+    url: 'https://iibkptqxqwtuiekjpftn.supabase.co',
+    anonKey: 'sb_publishable_xFZqbBmsib-VqlQqTMk7eg_A_YyWCDg'
   };
 
   const FACTORY_CONFIG = {
@@ -40,8 +40,8 @@
     dressCode: 'Smart Motorsport Casual / Team Apparel Resmi',
     defaultTribun: 'Main Grandstand - Zona A (Start/Finish)',
     baseUrl: '',
-    supabaseUrl: '',
-    supabaseAnonKey: ''
+    supabaseUrl: 'https://iibkptqxqwtuiekjpftn.supabase.co',
+    supabaseAnonKey: 'sb_publishable_xFZqbBmsib-VqlQqTMk7eg_A_YyWCDg'
   };
 
   const DEFAULT_GUEST = {
@@ -1100,6 +1100,8 @@
     '  updated_at timestamptz not null default now()',
     ');',
     'create index if not exists idx_rsvps_updated_at on public.rsvps (updated_at desc);',
+    'grant usage on schema public to anon, authenticated;',
+    'grant select, insert, update, delete on table public.rsvps to anon, authenticated;',
     'alter table public.rsvps enable row level security;',
     'drop policy if exists "Public can read rsvps" on public.rsvps;',
     'drop policy if exists "Public can insert rsvps" on public.rsvps;',

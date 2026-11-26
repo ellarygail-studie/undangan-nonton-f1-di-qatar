@@ -20,7 +20,10 @@ create table if not exists public.rsvps (
 -- Index untuk pengurutan waktu terbaru
 create index if not exists idx_rsvps_updated_at on public.rsvps (updated_at desc);
 
--- 2. Aktifkan Row Level Security (RLS)
+-- 2. Berikan izin akses tabel ke role anon & authenticated, lalu aktifkan RLS
+grant usage on schema public to anon, authenticated;
+grant select, insert, update, delete on table public.rsvps to anon, authenticated;
+
 alter table public.rsvps enable row level security;
 
 -- Hapus policy lama jika script dijalankan ulang agar tidak duplikat
