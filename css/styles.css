@@ -2761,6 +2761,147 @@ svg.lucide {
 }
 
 /* ==========================================================================
+   PADDOCK AUDIO CONTROLLER (NAVBAR BUTTON & FLOATING EQUALIZER DOCK)
+   ========================================================================== */
+.nav-audio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 11px;
+  background: var(--tarmac);
+  border: 1px solid var(--border-dark-strong);
+  border-radius: var(--radius-sm);
+  color: var(--text-light-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease;
+}
+
+.nav-audio-btn:hover {
+  border-color: var(--kerb-gold);
+  color: var(--paper);
+}
+
+.nav-audio-btn.is-playing {
+  border-color: var(--kerb-gold);
+  background: rgba(212, 160, 23, 0.14);
+  color: var(--paper);
+}
+
+.nav-audio-btn.is-playing svg.lucide {
+  color: var(--kerb-gold);
+}
+
+.floating-audio-dock {
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  z-index: 1050;
+}
+
+.paddock-audio-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 14px 9px 10px;
+  background: rgba(11, 12, 14, 0.94);
+  backdrop-filter: blur(8px);
+  color: var(--paper);
+  border: 1px solid var(--border-dark-strong);
+  border-left: 4px solid var(--qatar-maroon);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.18s ease, transform 0.15s ease, background-color 0.18s ease;
+}
+
+.paddock-audio-btn:hover {
+  border-color: var(--kerb-gold);
+  transform: translateY(-1px);
+}
+
+.paddock-audio-btn.is-playing {
+  border-color: rgba(212, 160, 23, 0.55);
+  border-left-color: var(--vermilion);
+}
+
+.audio-icon-box {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-xs);
+  background: var(--tarmac-elevated);
+  border: 1px solid var(--border-dark);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-light-muted);
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.paddock-audio-btn.is-playing .audio-icon-box {
+  background: rgba(217, 30, 24, 0.2);
+  border-color: var(--vermilion);
+  color: var(--paper);
+}
+
+.audio-meta-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.audio-kicker {
+  font-size: 0.62rem;
+  letter-spacing: 0.09em;
+  color: var(--kerb-gold);
+}
+
+.audio-state-label {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--paper);
+  margin-top: 2px;
+}
+
+.eq-bars {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2.5px;
+  height: 16px;
+  padding-left: 4px;
+}
+
+.eq-bar {
+  width: 3px;
+  height: 4px;
+  background: var(--text-light-muted);
+  border-radius: 1px;
+  transition: height 0.2s ease, background-color 0.2s ease;
+}
+
+.paddock-audio-btn.is-playing .eq-bar {
+  background: var(--kerb-gold);
+  animation: eqTelemetry 0.85s ease-in-out infinite alternate;
+}
+
+.paddock-audio-btn.is-playing .eq-bar:nth-child(1) { animation-duration: 0.62s; }
+.paddock-audio-btn.is-playing .eq-bar:nth-child(2) { animation-duration: 0.95s; animation-delay: 0.15s; }
+.paddock-audio-btn.is-playing .eq-bar:nth-child(3) { animation-duration: 0.74s; animation-delay: 0.28s; }
+.paddock-audio-btn.is-playing .eq-bar:nth-child(4) { animation-duration: 0.88s; animation-delay: 0.08s; }
+
+@keyframes eqTelemetry {
+  0% { height: 4px; }
+  50% { height: 15px; background: var(--vermilion); }
+  100% { height: 9px; background: var(--kerb-gold); }
+}
+
+/* ==========================================================================
    CUSTOM TOAST NOTIFICATIONS
    ========================================================================== */
 .toast-container {
@@ -2948,6 +3089,20 @@ svg.lucide {
   .circuit-map-canvas {
     height: 340px;
   }
+
+  .floating-audio-dock {
+    left: 12px;
+    bottom: 12px;
+  }
+
+  .paddock-audio-btn {
+    padding: 8px 11px 8px 8px;
+    gap: 8px;
+  }
+
+  .audio-kicker {
+    display: none;
+  }
 }
 
 /* ==========================================================================
@@ -2962,6 +3117,7 @@ svg.lucide {
   .site-footer,
   .preview-banner,
   .pass-utility-actions,
+  .floating-audio-dock,
   .modal-backdrop,
   .toast-container {
     display: none !important;
