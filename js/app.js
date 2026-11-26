@@ -28,12 +28,20 @@
 
   const DEFAULT_PIN = '291126';
 
+  /* Masukkan Project URL & Anon Key Supabase di sini agar aktif otomatis di semua perangkat */
+  const DEFAULT_SUPABASE = {
+    url: '',
+    anonKey: ''
+  };
+
   const FACTORY_CONFIG = {
     title: 'Formula 1 Qatar Airways Qatar Grand Prix 2026',
     host: 'Paddock Club Indonesia & Lusail Motorsport Hospitality',
     dressCode: 'Smart Motorsport Casual / Team Apparel Resmi',
     defaultTribun: 'Main Grandstand - Zona A (Start/Finish)',
-    baseUrl: ''
+    baseUrl: '',
+    supabaseUrl: '',
+    supabaseAnonKey: ''
   };
 
   const DEFAULT_GUEST = {
@@ -157,6 +165,9 @@
     guests: [],
     rsvps: [],
     audioPlaying: false,
+    supabase: null,
+    supabaseChannel: null,
+    dbStatus: 'local',
     leafletMap: null,
     mapLayers: {}
   };
@@ -1073,7 +1084,170 @@
   }
 
   /* ------------------------------------------------------------------------
-     GUEST RSVP MANAGEMENT (LOCALSTORAGE + LIVE SUMMARY)
+     SUPABASE CLOUD DATABASE & REALTIME RSVP ENGINE
+     ------------------------------------------------------------------------ */
+  const SUPABASE_SCHEMA_SQL = [
+    'create table if not exists public.rsvps (',
+    '  id uuid primary key default gen_random_uuid(),',
+    '  guest_key text not null unique,',
+    '  name text not null check (char_length(btrim(name)) > 0),',
+    "  status text not null check (status in ('Hadir', 'Mungkin', 'Tidak Hadir')),",
+    "  sessions text[] not null default '{}',",
+    "  team text not null default '',",
+    "  notes text not null default '',",
+    "  pass text not null default '',",
+    "  tribun text not null default '',",
+    '  updated_at timestamptz not null default now()',
+    ');',
+    'create index if not exists idx_rsvps_updated_at on public.rsvps (updated_at desc);',
+    'alter table public.rsvps enable row level security;',
+    'drop policy if exists "Public can read rsvps" on public.rsvps;',
+    'drop policy if exists "Public can insert rsvps" on public.rsvps;',
+    'drop policy if exists "Public can update rsvps" on public.rsvps;',
+    'drop policy if exists "Organizer can delete rsvps" on public.rsvps;',
+    'create policy "Public can read rsvps" on public.rsvps for select to anon, authenticated using (true);',
+    "create policy \"Public can insert rsvps\" on public.rsvps for insert to anon, authenticated with check (char_length(btrim(name)) > 0 and status in ('Hadir', 'Mungkin', 'Tidak Hadir'));",
+    "create policy \"Public can update rsvps\" on public.rsvps for update to anon, authenticated using (true) with check (char_length(btrim(name)) > 0 and status in ('Hadir', 'Mungkin', 'Tidak Hadir'));",
+    'create policy "Organizer can delete rsvps" on public.rsvps for delete to anon, authenticated using (true);'
+  ].join('\n');
+
+  function getSupabaseCredentials() {
+    const url = (state.config.supabaseUrl || DEFAULT_SUPABASE.url || '').trim();
+    const anonKey = (state.config.supabaseAnonKey || DEFAULT_SUPABASE.anonKey || '').trim();
+    return { url, anonKey };
+  }
+
+  function updateDbStatusUi(status) {
+    state.dbStatus = status;
+    const publicBadge = document.getElementById('rsvpDbBadge');
+    const adminBadge = document.getElementById('adminDbStatusBadge');
+
+    if (publicBadge) {
+      publicBadge.setAttribute('data-state', status);
+      if (status === 'online') {
+        publicBadge.textContent = 'LIVE CLOUD';
+      } else if (status === 'error') {
+        publicBadge.textContent = 'GANGGUAN DB';
+      } else {
+        publicBadge.textContent = 'MODE LOKAL';
+      }
+    }
+
+    if (adminBadge) {
+      if (status === 'online') {
+        adminBadge.className = 'badge badge-gold mono';
+        adminBadge.textContent = 'TERHUBUNG KE SUPABASE';
+      } else if (status === 'error') {
+        adminBadge.className = 'badge badge-maroon mono';
+        adminBadge.textContent = 'ERROR KONEKSI / TABEL';
+      } else {
+        adminBadge.className = 'badge badge-carbon mono';
+        adminBadge.textContent = 'BELUM TERSAMBUNG (LOKAL)';
+      }
+    }
+  }
+
+  function mapDbRowToRsvp(row) {
+    return {
+      id: row.id,
+      guestKey: row.guest_key || String(row.name || '').trim().toLowerCase(),
+      name: row.name,
+      status: row.status,
+      sessions: Array.isArray(row.sessions) ? row.sessions : [],
+      team: row.team || '',
+      notes: row.notes || '',
+      pass: row.pass || '',
+      tribun: row.tribun || '',
+      updatedAt: row.updated_at || new Date().toISOString()
+    };
+  }
+
+  async function fetchCloudRsvps(silent = true) {
+    if (!state.supabase) return false;
+    try {
+      const { data, error } = await state.supabase
+        .from('rsvps')
+        .select('*')
+        .order('updated_at', { ascending: false });
+
+      if (error) throw error;
+
+      state.rsvps = Array.isArray(data) ? data.map(mapDbRowToRsvp) : [];
+      writeStorageJson(STORAGE_KEYS.RSVPS, state.rsvps);
+      updateDbStatusUi('online');
+      renderPublicRsvpCounters();
+      renderGuestRsvpReceipt();
+      renderAdminRsvpTab();
+
+      if (!silent) {
+        showToast('success', 'Data Cloud Dimuat', `${state.rsvps.length} data RSVP tersinkron dari Supabase.`);
+      }
+      return true;
+    } catch (err) {
+      updateDbStatusUi('error');
+      if (!silent) {
+        const msg =
+          err && String(err.message || '').includes('rsvps')
+            ? 'Tabel public.rsvps belum ditemukan. Jalankan script SQL di menu SQL Editor Supabase.'
+            : 'Periksa kembali Project URL dan Anon Key Supabase Anda.';
+        showToast('error', 'Gagal Memuat Supabase', msg);
+      }
+      return false;
+    }
+  }
+
+  async function initSupabaseConnection(showFeedback = false) {
+    if (state.supabase && state.supabaseChannel && typeof state.supabase.removeChannel === 'function') {
+      try {
+        state.supabase.removeChannel(state.supabaseChannel);
+      } catch (_err) {}
+    }
+    state.supabase = null;
+    state.supabaseChannel = null;
+
+    const { url, anonKey } = getSupabaseCredentials();
+    if (!url || !anonKey) {
+      updateDbStatusUi('local');
+      return;
+    }
+
+    if (!window.supabase || typeof window.supabase.createClient !== 'function') {
+      updateDbStatusUi('error');
+      if (showFeedback) {
+        showToast('error', 'SDK Supabase Belum Siap', 'Pastikan koneksi internet aktif untuk memuat library Supabase.');
+      }
+      return;
+    }
+
+    try {
+      state.supabase = window.supabase.createClient(url, anonKey);
+      const ok = await fetchCloudRsvps(!showFeedback);
+      if (ok && showFeedback) {
+        showToast('success', 'Supabase Terhubung', 'Statistik kehadiran tamu kini aktif secara online untuk semua perangkat.');
+      }
+
+      if (typeof state.supabase.channel === 'function') {
+        state.supabaseChannel = state.supabase
+          .channel('public:rsvps')
+          .on(
+            'postgres_changes',
+            { event: '*', schema: 'public', table: 'rsvps' },
+            () => {
+              fetchCloudRsvps(true);
+            }
+          )
+          .subscribe();
+      }
+    } catch (_err) {
+      updateDbStatusUi('error');
+      if (showFeedback) {
+        showToast('error', 'URL Supabase Tidak Valid', 'Format Project URL harus berupa https://xxxx.supabase.co');
+      }
+    }
+  }
+
+  /* ------------------------------------------------------------------------
+     GUEST RSVP MANAGEMENT (SUPABASE CLOUD + LOCALSTORAGE FALLBACK)
      ------------------------------------------------------------------------ */
   function renderPublicRsvpCounters() {
     const total = state.rsvps.length;
@@ -1156,7 +1330,7 @@
       });
     });
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = nameInput.value.trim();
       if (!name) {
@@ -1178,36 +1352,87 @@
       const team = document.getElementById('rsvpTeam').value;
       const notes = document.getElementById('rsvpNotes').value.trim();
       const guest = getActiveGuestProfile();
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const submitTextEl = document.getElementById('rsvpSubmitText');
 
-      const payload = {
-        id: `rsvp_${Date.now()}`,
-        name,
-        status,
-        sessions,
-        team,
-        notes,
-        pass: guest.pass,
-        tribun: guest.tribun,
-        updatedAt: new Date().toISOString()
-      };
+      if (submitBtn) submitBtn.disabled = true;
+      if (submitTextEl) submitTextEl.textContent = 'Menyimpan RSVP...';
 
-      const existingIdx = state.rsvps.findIndex(
-        (item) => item.name.trim().toLowerCase() === name.toLowerCase()
-      );
+      try {
+        if (state.supabase) {
+          const guestKey = name.toLowerCase();
+          const existedBefore = state.rsvps.some(
+            (item) => item.name.trim().toLowerCase() === guestKey
+          );
 
-      if (existingIdx >= 0) {
-        payload.id = state.rsvps[existingIdx].id;
-        state.rsvps[existingIdx] = payload;
-        showToast('success', 'RSVP Diperbarui', `Konfirmasi kehadiran atas nama ${name} berhasil diperbarui.`);
-      } else {
-        state.rsvps.unshift(payload);
-        showToast('success', 'RSVP Tersimpan', `Terima kasih ${name}, konfirmasi kehadiran Anda telah tercatat.`);
+          const { error } = await state.supabase
+            .from('rsvps')
+            .upsert(
+              {
+                guest_key: guestKey,
+                name,
+                status,
+                sessions,
+                team,
+                notes,
+                pass: guest.pass,
+                tribun: guest.tribun,
+                updated_at: new Date().toISOString()
+              },
+              { onConflict: 'guest_key' }
+            );
+
+          if (error) throw error;
+
+          await fetchCloudRsvps(true);
+          showToast(
+            'success',
+            existedBefore ? 'RSVP Cloud Diperbarui' : 'RSVP Cloud Tersimpan',
+            `Terima kasih ${name}, konfirmasi kehadiran Anda kini tampil untuk seluruh tamu.`
+          );
+          return;
+        }
+
+        // Fallback mode lokal apabila Supabase belum dikonfigurasi
+        const payload = {
+          id: `rsvp_${Date.now()}`,
+          name,
+          status,
+          sessions,
+          team,
+          notes,
+          pass: guest.pass,
+          tribun: guest.tribun,
+          updatedAt: new Date().toISOString()
+        };
+
+        const existingIdx = state.rsvps.findIndex(
+          (item) => item.name.trim().toLowerCase() === name.toLowerCase()
+        );
+
+        if (existingIdx >= 0) {
+          payload.id = state.rsvps[existingIdx].id;
+          state.rsvps[existingIdx] = payload;
+          showToast('success', 'RSVP Diperbarui', `Konfirmasi kehadiran atas nama ${name} berhasil diperbarui.`);
+        } else {
+          state.rsvps.unshift(payload);
+          showToast('success', 'RSVP Tersimpan', `Terima kasih ${name}, konfirmasi kehadiran Anda telah tercatat.`);
+        }
+
+        writeStorageJson(STORAGE_KEYS.RSVPS, state.rsvps);
+        renderPublicRsvpCounters();
+        renderGuestRsvpReceipt();
+        renderAdminRsvpTab();
+      } catch (_err) {
+        showToast(
+          'error',
+          'Gagal Menyimpan ke Cloud',
+          'Pastikan tabel rsvps dan policy RLS di Supabase sudah dibuat sesuai schema.sql.'
+        );
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+        if (submitTextEl) submitTextEl.textContent = 'Simpan Konfirmasi RSVP';
       }
-
-      writeStorageJson(STORAGE_KEYS.RSVPS, state.rsvps);
-      renderPublicRsvpCounters();
-      renderGuestRsvpReceipt();
-      renderAdminRsvpTab();
     });
   }
 
@@ -1280,8 +1505,12 @@
     document.getElementById('cfgDefaultTribun').value = state.config.defaultTribun;
     renderAdminSessionTimeEditors();
 
-    // Tab 3: Base URL & RSVP Stats
+    // Tab 3: Base URL, Supabase Config & RSVP Stats
     document.getElementById('cfgBaseUrl').value = state.config.baseUrl || '';
+    const creds = getSupabaseCredentials();
+    document.getElementById('cfgSupabaseUrl').value = creds.url;
+    document.getElementById('cfgSupabaseKey').value = creds.anonKey;
+    updateDbStatusUi(state.dbStatus);
     renderAdminRsvpTab();
   }
 
@@ -1947,11 +2176,45 @@
       showToast('success', 'PIN Diperbarui', 'PIN akses penyelenggara berhasil diganti.');
     });
 
+    // Admin Tab 3: Supabase Cloud Configuration & Actions
+    document.getElementById('btnSaveSupabaseConfig').addEventListener('click', async () => {
+      const urlVal = document.getElementById('cfgSupabaseUrl').value.trim();
+      const keyVal = document.getElementById('cfgSupabaseKey').value.trim();
+
+      state.config.supabaseUrl = urlVal;
+      state.config.supabaseAnonKey = keyVal;
+      writeStorageJson(STORAGE_KEYS.CONFIG, state.config);
+
+      if (!urlVal || !keyVal) {
+        await initSupabaseConnection(false);
+        showToast('info', 'Mode Lokal Aktif', 'Kredensial Supabase dikosongkan; menggunakan penyimpanan lokal.');
+        return;
+      }
+
+      await initSupabaseConnection(true);
+    });
+
+    document.getElementById('btnRefreshCloudRsvp').addEventListener('click', async () => {
+      if (!state.supabase) {
+        showToast('info', 'Belum Terhubung', 'Masukkan Project URL dan Anon Key Supabase terlebih dahulu.');
+        return;
+      }
+      await fetchCloudRsvps(false);
+    });
+
+    document.getElementById('btnCopySupabaseSql').addEventListener('click', () => {
+      copyTextToClipboard(
+        SUPABASE_SCHEMA_SQL,
+        'Script SQL Disalin',
+        'Tempel (Paste) dan jalankan di menu SQL Editor pada Dashboard Supabase.'
+      );
+    });
+
     // Admin Tab 3: RSVP Row Deletion & Bulk Clear
     document.getElementById('adminRsvpTableBody').addEventListener('click', async (e) => {
       const btn = e.target.closest('[data-rsvp-del]');
       if (!btn) return;
-      const target = state.rsvps.find((r) => r.id === btn.dataset.rsvpDel);
+      const target = state.rsvps.find((r) => String(r.id) === String(btn.dataset.rsvpDel));
       if (!target) return;
 
       const ok = await showConfirmModal(
@@ -1960,11 +2223,20 @@
         'Hapus'
       );
       if (ok) {
-        state.rsvps = state.rsvps.filter((r) => r.id !== target.id);
-        writeStorageJson(STORAGE_KEYS.RSVPS, state.rsvps);
-        renderAdminRsvpTab();
-        renderPublicRsvpCounters();
-        renderGuestRsvpReceipt();
+        if (state.supabase) {
+          const { error } = await state.supabase.from('rsvps').delete().eq('id', target.id);
+          if (error) {
+            showToast('error', 'Gagal Menghapus di Cloud', 'Periksa policy DELETE pada tabel rsvps di Supabase.');
+            return;
+          }
+          await fetchCloudRsvps(true);
+        } else {
+          state.rsvps = state.rsvps.filter((r) => String(r.id) !== String(target.id));
+          writeStorageJson(STORAGE_KEYS.RSVPS, state.rsvps);
+          renderAdminRsvpTab();
+          renderPublicRsvpCounters();
+          renderGuestRsvpReceipt();
+        }
         showToast('info', 'RSVP Dihapus', `Data RSVP ${target.name} telah dihapus.`);
       }
     });
@@ -1982,11 +2254,20 @@
         'Hapus Semua'
       );
       if (ok) {
-        state.rsvps = [];
-        writeStorageJson(STORAGE_KEYS.RSVPS, state.rsvps);
-        renderAdminRsvpTab();
-        renderPublicRsvpCounters();
-        renderGuestRsvpReceipt();
+        if (state.supabase) {
+          const { error } = await state.supabase.from('rsvps').delete().neq('guest_key', '');
+          if (error) {
+            showToast('error', 'Gagal Mengosongkan Cloud', 'Periksa policy DELETE pada tabel rsvps di Supabase.');
+            return;
+          }
+          await fetchCloudRsvps(true);
+        } else {
+          state.rsvps = [];
+          writeStorageJson(STORAGE_KEYS.RSVPS, state.rsvps);
+          renderAdminRsvpTab();
+          renderPublicRsvpCounters();
+          renderGuestRsvpReceipt();
+        }
         showToast('info', 'RSVP Dibersihkan', 'Seluruh rekapitulasi RSVP telah dikosongkan.');
       }
     });
@@ -2210,6 +2491,7 @@
     initRsvpInteractions();
     bindEvents();
     initAudioPlayer();
+    initSupabaseConnection(false);
     initLeafletCircuitMap();
 
     // Tick every second for real-time countdown and live WIB clock

@@ -820,9 +820,12 @@
 
             <!-- Live Community RSVP Summary Box -->
             <div class="paddock-pulse-card">
-              <div class="pulse-header">
-                <i data-lucide="bar-chart-3"></i>
-                <span>STATISTIK KEHADIRAN TAMU</span>
+              <div class="pulse-header pulse-header-between">
+                <span class="pulse-header-left">
+                  <i data-lucide="bar-chart-3"></i>
+                  <span>STATISTIK KEHADIRAN TAMU</span>
+                </span>
+                <span id="rsvpDbBadge" class="db-status-pill mono" data-state="local">MODE LOKAL</span>
               </div>
               <div class="pulse-counters">
                 <div class="pulse-stat">
@@ -1272,6 +1275,47 @@
             </div>
           </div>
 
+          <!-- Supabase Cloud Database Configuration Card -->
+          <div class="admin-card admin-card-mt">
+            <div class="admin-card-head">
+              <h3 class="admin-card-title">
+                <i data-lucide="cloud"></i>
+                <span>Database Online Supabase (Sinkronisasi RSVP Semua Tamu)</span>
+              </h3>
+              <span id="adminDbStatusBadge" class="badge badge-carbon mono">BELUM TERSAMBUNG</span>
+            </div>
+
+            <p class="admin-helper-note">
+              Masukkan <strong>Project URL</strong> dan <strong>Anon / Publishable Key</strong> dari menu <em>Project Settings &gt; API</em> di Supabase. Agar langsung aktif otomatis di HP seluruh tamu tanpa setting manual, simpan juga nilainya pada konstanta <code>DEFAULT_SUPABASE</code> di <code>js/app.js</code>.
+            </p>
+
+            <div class="form-grid-2">
+              <div class="form-row">
+                <label for="cfgSupabaseUrl" class="form-label">SUPABASE PROJECT URL</label>
+                <input type="url" id="cfgSupabaseUrl" class="form-input form-input-dark mono" placeholder="https://xxxxxxxxxxxx.supabase.co" />
+              </div>
+              <div class="form-row">
+                <label for="cfgSupabaseKey" class="form-label">SUPABASE ANON / PUBLISHABLE KEY</label>
+                <input type="text" id="cfgSupabaseKey" class="form-input form-input-dark mono" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." />
+              </div>
+            </div>
+
+            <div class="guest-bulk-actions">
+              <button type="button" id="btnSaveSupabaseConfig" class="btn btn-vermilion btn-sm">
+                <i data-lucide="plug-zap"></i>
+                <span>Simpan &amp; Hubungkan Supabase</span>
+              </button>
+              <button type="button" id="btnRefreshCloudRsvp" class="btn btn-outline-light btn-sm">
+                <i data-lucide="refresh-cw"></i>
+                <span>Muat Ulang Data Cloud</span>
+              </button>
+              <button type="button" id="btnCopySupabaseSql" class="btn btn-outline-light btn-sm">
+                <i data-lucide="copy"></i>
+                <span>Salin Script SQL Tabel</span>
+              </button>
+            </div>
+          </div>
+
           <!-- RSVP Recap & Statistics Card -->
           <div class="admin-card admin-card-mt">
             <div class="admin-card-head">
@@ -1364,9 +1408,10 @@
   <!-- Toast Notification Stack (Replaces window.alert) -->
   <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="false"></div>
 
-  <!-- External Libraries: Lucide Icons & Leaflet 1.9.4 -->
+  <!-- External Libraries: Lucide Icons, Leaflet 1.9.4 & Supabase JS v2 -->
   <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <!-- Application Script -->
   <script src="js/app.js"></script>
