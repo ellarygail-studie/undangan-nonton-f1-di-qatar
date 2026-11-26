@@ -78,6 +78,10 @@
           <a href="#schedule" class="nav-link">Jadwal WIB</a>
           <a href="#circuit" class="nav-link">Sirkuit &amp; Peta</a>
           <a href="#rsvp" class="nav-link">RSVP</a>
+          <button type="button" id="btnNavAudioToggle" class="nav-audio-btn" data-audio-toggle aria-pressed="false" title="Aktifkan atau matikan musik latar F1 Theme">
+            <i data-lucide="volume-x" id="navAudioIcon"></i>
+            <span id="navAudioLabel" class="mono">LAGU: MATI</span>
+          </button>
           <a href="#rsvp" class="btn btn-vermilion btn-sm nav-cta">
             <i data-lucide="check-square"></i>
             <span>Konfirmasi Kehadiran</span>
@@ -1334,6 +1338,27 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Background Audio Element (F1 Theme) & Floating Paddock Audio Toggle -->
+  <audio id="bgAudio" src="lagu/f1%20theme.mp3" loop preload="auto"></audio>
+
+  <div class="floating-audio-dock" id="floatingAudioDock">
+    <button type="button" id="btnFloatingAudio" class="paddock-audio-btn" data-audio-toggle aria-pressed="false" aria-label="Aktifkan atau matikan lagu latar Formula 1">
+      <span class="audio-icon-box" id="floatingAudioIconWrap">
+        <i data-lucide="volume-x" id="floatingAudioIcon"></i>
+      </span>
+      <span class="audio-meta-text">
+        <span class="audio-kicker mono">F1 OFFICIAL THEME</span>
+        <span class="audio-state-label" id="floatingAudioLabel">Aktifkan Lagu</span>
+      </span>
+      <span class="eq-bars" aria-hidden="true">
+        <span class="eq-bar"></span>
+        <span class="eq-bar"></span>
+        <span class="eq-bar"></span>
+        <span class="eq-bar"></span>
+      </span>
+    </button>
   </div>
 
   <!-- Toast Notification Stack (Replaces window.alert) -->
