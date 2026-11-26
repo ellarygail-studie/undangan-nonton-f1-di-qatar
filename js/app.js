@@ -22,7 +22,8 @@
     CONFIG: 'f1_qatar2026_event_config',
     SCHEDULE: 'f1_qatar2026_schedule_wib',
     GUESTS: 'f1_qatar2026_guests',
-    RSVPS: 'f1_qatar2026_rsvps'
+    RSVPS: 'f1_qatar2026_rsvps',
+    AUDIO: 'f1_qatar2026_audio_enabled'
   };
 
   const DEFAULT_PIN = '291126';
@@ -155,6 +156,7 @@
     sessions: [],
     guests: [],
     rsvps: [],
+    audioPlaying: false,
     leafletMap: null,
     mapLayers: {}
   };
@@ -2064,6 +2066,138 @@
   }
 
   /* ------------------------------------------------------------------------
+     BACKGROUND AUDIO PLAYER (lagu/f1 theme.mp3)
+     ------------------------------------------------------------------------ */
+  function updateAudioUi(isPlaying) {
+    state.audioPlaying = Boolean(isPlaying);
+
+    const floatingBtn = document.getElementById('btnFloatingAudio');
+    const floatingLabel = document.getElementById('floatingAudioLabel');
+    const floatingIconWrap = document.getElementById('floatingAudioIconWrap');
+
+    const navBtn = document.getElementById('btnNavAudioToggle');
+    const navLabel = document.getElementById('navAudioLabel');
+
+    const iconName = state.audioPlaying ? 'volume-2' : 'volume-x';
+
+    if (floatingBtn && floatingLabel && floatingIconWrap) {
+      floatingBtn.classList.toggle('is-playing', state.audioPlaying);
+      floatingBtn.setAttribute('aria-pressed', state.audioPlaying ? 'true' : 'false');
+      floatingLabel.textContent = state.audioPlaying ? 'Matikan Lagu' : 'Aktifkan Lagu';
+      floatingIconWrap.innerHTML = `<i data-lucide="${iconName}"></i>`;
+    }
+
+    if (navBtn && navLabel) {
+      navBtn.classList.toggle('is-playing', state.audioPlaying);
+      navBtn.setAttribute('aria-pressed', state.audioPlaying ? 'true' : 'false');
+      navLabel.textContent = state.audioPlaying ? 'LAGU: AKTIF' : 'LAGU: MATI';
+      const existingIcon = navBtn.querySelector('svg.lucide, [data-lucide]');
+      if (existingIcon) {
+        existingIcon.outerHTML = `<i data-lucide="${iconName}"></i>`;
+      }
+    }
+
+    refreshIcons();
+  }
+
+  function initAudioPlayer() {
+    const audio = document.getElementById('bgAudio');
+    if (!audio || typeof audio.play !== 'function') return;
+
+    audio.volume = 0.55;
+
+    let savedPref = null;
+    try {
+      savedPref = window.localStorage.getItem(STORAGE_KEYS.AUDIO);
+    } catch (_err) {
+      savedPref = null;
+    }
+
+    // Default to enabled unless user explicitly turned music off previously
+    const shouldAutoStart = savedPref !== 'false';
+    let gestureUnlockActive = false;
+
+    const removeGestureListeners = () => {
+      if (!gestureUnlockActive) return;
+      gestureUnlockActive = false;
+      document.removeEventListener('click', onFirstGesture);
+      document.removeEventListener('keydown', onFirstGesture);
+    };
+
+    const onFirstGesture = (e) => {
+      if (e.target && typeof e.target.closest === 'function' && e.target.closest('[data-audio-toggle]')) {
+        return;
+      }
+      removeGestureListeners();
+      const playAttempt = audio.play();
+      if (playAttempt && typeof playAttempt.then === 'function') {
+        playAttempt
+          .then(() => {
+            updateAudioUi(true);
+          })
+          .catch(() => {
+            updateAudioUi(false);
+          });
+      }
+    };
+
+    const toggleAudio = () => {
+      removeGestureListeners();
+      if (!audio.paused) {
+        audio.pause();
+        updateAudioUi(false);
+        try {
+          window.localStorage.setItem(STORAGE_KEYS.AUDIO, 'false');
+        } catch (_err) {}
+        showToast('info', 'Lagu Dimatikan', 'Musik latar Formula 1 Theme dihentikan.');
+      } else {
+        const playPromise = audio.play();
+        if (playPromise && typeof playPromise.then === 'function') {
+          playPromise
+            .then(() => {
+              updateAudioUi(true);
+              try {
+                window.localStorage.setItem(STORAGE_KEYS.AUDIO, 'true');
+              } catch (_err) {}
+              showToast('success', 'Lagu Diaktifkan', 'Memutar musik latar Formula 1 Official Theme.');
+            })
+            .catch(() => {
+              updateAudioUi(false);
+              showToast('error', 'Gagal Memutar Audio', 'Pastikan file lagu tersedia dan izin suara browser aktif.');
+            });
+        } else {
+          updateAudioUi(!audio.paused);
+        }
+      }
+    };
+
+    document.querySelectorAll('[data-audio-toggle]').forEach((btn) => {
+      btn.addEventListener('click', toggleAudio);
+    });
+
+    audio.addEventListener('play', () => updateAudioUi(true));
+    audio.addEventListener('pause', () => updateAudioUi(false));
+
+    updateAudioUi(false);
+
+    if (shouldAutoStart) {
+      const initialPlay = audio.play();
+      if (initialPlay && typeof initialPlay.then === 'function') {
+        initialPlay
+          .then(() => {
+            updateAudioUi(true);
+          })
+          .catch(() => {
+            // Browser blocked autoplay prior to user interaction; unlock on first click/tap
+            gestureUnlockActive = true;
+            document.addEventListener('click', onFirstGesture);
+            document.addEventListener('keydown', onFirstGesture);
+          });
+      }
+    }
+  }
+
+  /* ------------------------------------------------------------------------
      BOOT APPLICATION
      ------------------------------------------------------------------------ */
   function initApp() {
@@ -2075,6 +2209,7 @@
     updateClocksAndCountdown();
     initRsvpInteractions();
     bindEvents();
+    initAudioPlayer();
     initLeafletCircuitMap();
 
     // Tick every second for real-time countdown and live WIB clock
