@@ -19,6 +19,43 @@
   <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
+  <!-- =================================================================
+       HERO COVER / SAMPUL PEMBUKA UNDANGAN (Rubric #1: Smooth Open + Auto Audio)
+       ================================================================= -->
+  <div id="invitationCover" class="invitation-cover" role="dialog" aria-modal="true" aria-labelledby="coverEventTitle">
+    <div class="kerb-stripe" aria-hidden="true"></div>
+    <div class="cover-bg-layer" aria-hidden="true"></div>
+    <div class="container cover-inner">
+      <div class="cover-top-meta mono">
+        <span>FIA FORMULA 1 WORLD CHAMPIONSHIP // ROUND 22</span>
+        <span>27 &ndash; 29 NOVEMBER 2026</span>
+      </div>
+
+      <div class="cover-center-box">
+        <span class="badge badge-maroon">OFFICIAL DIGITAL INVITATION</span>
+        <h2 id="coverEventTitle" class="cover-title">FORMULA 1 QATAR AIRWAYS QATAR GRAND PRIX 2026</h2>
+        <p class="cover-host">Diselenggarakan oleh <strong id="coverHostName">Paddock Club Indonesia &amp; Lusail Motorsport Hospitality</strong></p>
+
+        <div class="cover-guest-card">
+          <span class="cover-guest-kicker mono">KEPADA YANG TERHORMAT</span>
+          <div class="cover-guest-name" id="coverGuestName">Tamu Undangan VIP</div>
+          <div class="cover-guest-role" id="coverGuestRole">Tamu Kehormatan Paddock &amp; Komunitas Motorsport</div>
+          <span class="cover-pass-chip mono" id="coverGuestPass">PADDOCK CLUB VIP</span>
+        </div>
+
+        <button type="button" id="btnOpenInvitation" class="btn btn-vermilion btn-lg cover-open-btn">
+          <i data-lucide="mail-open"></i>
+          <span>Buka Undangan Resmi</span>
+        </button>
+        <span class="cover-audio-hint mono">Membuka sampul otomatis memutar tema resmi Formula 1</span>
+      </div>
+
+      <div class="cover-bottom-meta mono">
+        <span>LUSAIL INTERNATIONAL CIRCUIT &bull; DOHA, QATAR</span>
+      </div>
+    </div>
+  </div>
+
   <!-- Kerb Top Accent Bar -->
   <div class="kerb-stripe" aria-hidden="true"></div>
 
@@ -77,6 +114,7 @@
           <a href="#invitation" class="nav-link">Surat &amp; Pass</a>
           <a href="#schedule" class="nav-link">Jadwal WIB</a>
           <a href="#circuit" class="nav-link">Sirkuit &amp; Peta</a>
+          <a href="#gallery" class="nav-link">Galeri</a>
           <a href="#rsvp" class="nav-link">RSVP</a>
           <button type="button" id="btnNavAudioToggle" class="nav-audio-btn" data-audio-toggle aria-pressed="false" title="Aktifkan atau matikan musik latar F1 Theme">
             <i data-lucide="volume-x" id="navAudioIcon"></i>
@@ -650,16 +688,145 @@
     </section>
 
     <!-- =================================================================
-         SECTION 04 — INTERACTIVE GUEST RSVP
+         SECTION 04 — GALERI FOTO ESTETIS & CAROUSEL (Rubric #4)
+         ================================================================= -->
+    <section id="gallery" class="section section-gallery">
+      <div class="container">
+        <div class="section-heading-bar section-heading-dark reveal-on-scroll" data-reveal="up">
+          <div class="section-index mono">04 // PADDOCK VISUAL ARCHIVE</div>
+          <div class="section-heading-main gallery-heading-flex">
+            <div>
+              <h2 class="section-title">GALERI DOKUMENTASI &amp; ATMOSFER BALAP MALAM</h2>
+              <p class="section-desc">Sorotan visual lintasan malam Lusail International Circuit, aksi pit stop berkecepatan tinggi, dan area hospitality Paddock Club.</p>
+            </div>
+            <div class="gallery-view-switcher" role="group" aria-label="Mode Tampilan Galeri">
+              <button type="button" id="btnGalleryGridMode" class="layer-btn active">
+                <i data-lucide="layout-grid"></i>
+                <span>Bento Grid</span>
+              </button>
+              <button type="button" id="btnGalleryCarouselMode" class="layer-btn">
+                <i data-lucide="gallery-horizontal"></i>
+                <span>Carousel</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bento / Asymmetric Editorial Photo Grid (6 Photos) -->
+        <div id="galleryViewport" class="gallery-viewport mode-grid">
+          <div id="galleryTrack" class="gallery-bento-grid">
+            <figure class="gallery-item gallery-span-7 reveal-on-scroll" data-reveal="up" data-gallery-idx="0">
+              <div class="gallery-img-wrap">
+                <img src="img/gallery/lusail-floodlit-straight.jpg" alt="Mobil Formula 1 melaju di lintasan lurus utama Lusail di bawah lampu sorot malam" loading="lazy" />
+                <span class="gallery-shot-tag mono">SHOT 01 // MAIN STRAIGHT</span>
+                <button type="button" class="gallery-zoom-btn" aria-label="Perbesar foto Lintasan Lurus Utama Lusail">
+                  <i data-lucide="maximize-2"></i>
+                </button>
+              </div>
+              <figcaption class="gallery-caption">
+                <strong>Lintasan Lurus Utama 1,068 KM</strong>
+                <span>Percikan titanium di bawah ribuan lampu sorot malam Lusail International Circuit.</span>
+              </figcaption>
+            </figure>
+
+            <figure class="gallery-item gallery-span-5 reveal-on-scroll" data-reveal="up" data-gallery-idx="1">
+              <div class="gallery-img-wrap">
+                <img src="img/gallery/lusail-paddock-hospitality.jpg" alt="Teras kaca eksklusif Paddock Club menghadap pit lane pada malam hari" loading="lazy" />
+                <span class="gallery-shot-tag mono">SHOT 02 // VIP LOUNGE</span>
+                <button type="button" class="gallery-zoom-btn" aria-label="Perbesar foto Paddock Club Hospitality">
+                  <i data-lucide="maximize-2"></i>
+                </button>
+              </div>
+              <figcaption class="gallery-caption">
+                <strong>Lusail Paddock Club Hospitality</strong>
+                <span>Teras pandang VIP tepat di atas garasi tim dan garis start/finish.</span>
+              </figcaption>
+            </figure>
+
+            <figure class="gallery-item gallery-span-6 reveal-on-scroll" data-reveal="up" data-gallery-idx="2">
+              <div class="gallery-img-wrap">
+                <img src="img/gallery/lusail-triple-apex.jpg" alt="Duel dua mobil Formula 1 melibas tikungan cepat dengan piringan rem menyala" loading="lazy" />
+                <span class="gallery-shot-tag mono">SHOT 03 // SECTOR 03</span>
+                <button type="button" class="gallery-zoom-btn" aria-label="Perbesar foto Triple-Apex Tikungan 12-14">
+                  <i data-lucide="maximize-2"></i>
+                </button>
+              </div>
+              <figcaption class="gallery-caption">
+                <strong>Triple-Right-Hander Tikungan 12&ndash;14</strong>
+                <span>Beban gravitasi lateral 4.8G melewati kerb khas Qatar Maroon dan emas.</span>
+              </figcaption>
+            </figure>
+
+            <figure class="gallery-item gallery-span-6 reveal-on-scroll" data-reveal="up" data-gallery-idx="3">
+              <div class="gallery-img-wrap">
+                <img src="img/gallery/f1-starting-grid.jpg" alt="Panorama sirkuit balap malam Formula 1 dengan gemerlap cahaya lampu kota dan lintasan" loading="lazy" />
+                <span class="gallery-shot-tag mono">SHOT 04 // FLOODLIT ARENA</span>
+                <button type="button" class="gallery-zoom-btn" aria-label="Perbesar foto Atmosfer Balap Malam">
+                  <i data-lucide="maximize-2"></i>
+                </button>
+              </div>
+              <figcaption class="gallery-caption">
+                <strong>Spektakel Balap Malam</strong>
+                <span>Kontras dramatis antara aspal gelap dan tata cahaya sirkuit berstandar FIA Grade 1.</span>
+              </figcaption>
+            </figure>
+
+            <figure class="gallery-item gallery-span-5 reveal-on-scroll" data-reveal="up" data-gallery-idx="4">
+              <div class="gallery-img-wrap">
+                <img src="img/gallery/f1-paddock-garage.jpg" alt="Pembalap dan kru tim modern bersiap di area sirkuit Formula 1" loading="lazy" />
+                <span class="gallery-shot-tag mono">SHOT 05 // COCKPIT FOCUS</span>
+                <button type="button" class="gallery-zoom-btn" aria-label="Perbesar foto Persiapan Kokpit & Pembalap">
+                  <i data-lucide="maximize-2"></i>
+                </button>
+              </div>
+              <figcaption class="gallery-caption">
+                <strong>Fokus Kokpit &amp; Telemetri</strong>
+                <span>Konsentrasi penuh pembalap menghadapi suhu malam gurun Qatar selama 57 lap.</span>
+              </figcaption>
+            </figure>
+
+            <figure class="gallery-item gallery-span-7 reveal-on-scroll" data-reveal="up" data-gallery-idx="5">
+              <div class="gallery-img-wrap">
+                <img src="img/gallery/f1-pitstop-crew.jpg" alt="Kru pit stop Formula 1 mengganti keempat ban secara presisi dalam hitungan detik" loading="lazy" />
+                <span class="gallery-shot-tag mono">SHOT 06 // PIT LANE</span>
+                <button type="button" class="gallery-zoom-btn" aria-label="Perbesar foto Aksi Pit Stop Presisi">
+                  <i data-lucide="maximize-2"></i>
+                </button>
+              </div>
+              <figcaption class="gallery-caption">
+                <strong>Strategi &amp; Presisi Pit Stop</strong>
+                <span>Koordinasi 20 kru mekanik mengeksekusi pergantian ban di bawah 2,5 detik.</span>
+              </figcaption>
+            </figure>
+          </div>
+
+          <!-- Carousel Navigation Controls (Active in Carousel Mode) -->
+          <div id="galleryCarouselControls" class="gallery-carousel-controls hidden">
+            <button type="button" id="btnCarouselPrev" class="btn btn-outline-light btn-sm" aria-label="Foto sebelumnya">
+              <i data-lucide="chevron-left"></i>
+              <span>Sebelumnya</span>
+            </button>
+            <div class="carousel-dots" id="galleryCarouselDots"></div>
+            <button type="button" id="btnCarouselNext" class="btn btn-outline-light btn-sm" aria-label="Foto berikutnya">
+              <span>Berikutnya</span>
+              <i data-lucide="chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================
+         SECTION 05 — INTERACTIVE GUEST RSVP, DIGITAL GIFT/ADDRESS & GUESTBOOK
          (Carbon #0B0C0E & Tarmac #14161A)
          ================================================================= -->
     <section id="rsvp" class="section section-dark">
       <div class="container">
-        <div class="section-heading-bar section-heading-dark">
-          <div class="section-index mono">04 // PADDOCK ATTENDANCE CONFIRMATION</div>
+        <div class="section-heading-bar section-heading-dark reveal-on-scroll" data-reveal="up">
+          <div class="section-index mono">05 // PADDOCK ATTENDANCE &amp; GUESTBOOK</div>
           <div class="section-heading-main">
-            <h2 class="section-title">KONFIRMASI KEHADIRAN (RSVP)</h2>
-            <p class="section-desc">Konfirmasikan kehadiran Anda, pilih sesi akhir pekan yang akan diikuti, dan tentukan konstruktor dukungan Anda musim ini.</p>
+            <h2 class="section-title">KONFIRMASI KEHADIRAN (RSVP) &amp; BUKU TAMU</h2>
+            <p class="section-desc">Konfirmasikan kehadiran Anda, pilih sesi akhir pekan yang akan diikuti, dan tulis ucapan atau dukungan yang langsung tampil di Buku Tamu Paddock.</p>
           </div>
         </div>
 
@@ -773,8 +940,8 @@
             </div>
 
             <div class="form-row">
-              <label for="rsvpNotes" class="form-label">CATATAN KHUSUS / PREFERENSI HOSPITALITY</label>
-              <textarea id="rsvpNotes" name="notes" rows="3" class="form-textarea form-input-dark" placeholder="Contoh: Hadir bersama rekan komunitas, kebutuhan parkir khusus, atau preferensi hidangan malam..." maxlength="350"></textarea>
+              <label for="rsvpNotes" class="form-label">UCAPAN, DOA / CATATAN HOSPITALITY</label>
+              <textarea id="rsvpNotes" name="notes" rows="3" class="form-textarea form-input-dark" placeholder="Tuliskan ucapan semangat, prediksi podium, atau catatan kehadiran untuk buku tamu..." maxlength="350"></textarea>
             </div>
 
             <div class="form-actions">
@@ -870,7 +1037,51 @@
                 </li>
               </ul>
             </div>
+
+            <!-- Copyable Hospitality Contribution & Venue Address Card (Rubric #3) -->
+            <div class="copy-info-card">
+              <div class="pulse-header">
+                <i data-lucide="wallet-cards"></i>
+                <span>REGISTRASI PATUNGAN &amp; ALAMAT SEKRETARIAT</span>
+              </div>
+              <div class="copy-info-item">
+                <div>
+                  <span class="copy-kicker mono">REKENING KOMUNITAS // BCA</span>
+                  <strong class="copy-val mono" id="rekNumberText">8720 4591 26</strong>
+                  <span class="copy-sub">a.n. Paddock Club Indonesia</span>
+                </div>
+                <button type="button" class="btn btn-outline-light btn-sm" data-copy-text="8720459126" data-copy-label="Nomor Rekening BCA">
+                  <i data-lucide="copy"></i>
+                  <span>Salin</span>
+                </button>
+              </div>
+              <div class="copy-info-item">
+                <div>
+                  <span class="copy-kicker mono">ALAMAT LOKASI / KADO MERCHANDISE</span>
+                  <strong class="copy-val">Lusail International Circuit, Gate 01 VIP</strong>
+                  <span class="copy-sub">Al Khor Coastal Rd, Lusail, Doha, Qatar</span>
+                </div>
+                <button type="button" class="btn btn-outline-light btn-sm" data-copy-text="Lusail International Circuit, Gate 01 VIP, Al Khor Coastal Rd, Lusail, Doha, Qatar" data-copy-label="Alamat Lokasi Sirkuit">
+                  <i data-lucide="copy"></i>
+                  <span>Salin</span>
+                </button>
+              </div>
+            </div>
           </aside>
+        </div>
+
+        <!-- Live Public Guestbook / Daftar Buku Tamu & Ucapan (Rubric #5) -->
+        <div class="guestbook-panel reveal-on-scroll" data-reveal="up">
+          <div class="guestbook-header">
+            <div>
+              <span class="modal-kicker mono">LIVE COMMUNITY FEED</span>
+              <h3 class="guestbook-title">BUKU TAMU &amp; UCAPAN PADDOCK</h3>
+            </div>
+            <span class="guest-total-pill mono" id="guestbookCountBadge">0 UCAPAN</span>
+          </div>
+          <div id="publicGuestbookList" class="guestbook-grid" aria-live="polite">
+            <!-- Populated dynamically from Supabase / RSVP state -->
+          </div>
         </div>
       </div>
     </section>
@@ -1380,6 +1591,33 @@
           <button type="button" id="btnConfirmCancel" class="btn btn-outline-light">Batal</button>
           <button type="button" id="btnConfirmOk" class="btn btn-vermilion">Lanjutkan</button>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================================================================
+       MODAL 4: GALLERY LIGHTBOX VIEWER
+       ================================================================= -->
+  <div id="galleryLightboxModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="lightboxCaptionTitle">
+    <div class="lightbox-dialog">
+      <div class="lightbox-topbar">
+        <span id="lightboxCounter" class="mono lightbox-counter">01 / 06</span>
+        <button type="button" class="modal-close-btn" data-close-modal="galleryLightboxModal" aria-label="Tutup pratinjau foto">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+      <div class="lightbox-stage">
+        <button type="button" id="btnLightboxPrev" class="lightbox-nav-btn" aria-label="Foto sebelumnya">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <img id="lightboxImg" src="img/gallery/lusail-floodlit-straight.jpg" alt="Pratinjau Foto Galeri" class="lightbox-img" />
+        <button type="button" id="btnLightboxNext" class="lightbox-nav-btn" aria-label="Foto berikutnya">
+          <i data-lucide="chevron-right"></i>
+        </button>
+      </div>
+      <div class="lightbox-caption-bar">
+        <strong id="lightboxCaptionTitle">Lintasan Lurus Utama</strong>
+        <span id="lightboxCaptionDesc">Lusail International Circuit</span>
       </div>
     </div>
   </div>

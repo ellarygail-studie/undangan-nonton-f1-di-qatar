@@ -616,7 +616,19 @@
     const raceSession = state.sessions.find((s) => s.id === 'race') || state.sessions[4];
     const raceTiming = getSessionTiming(raceSession);
 
-    // Event Title & Host in Hero
+    // Event Title & Host in Cover + Hero
+    const coverTitleEl = document.getElementById('coverEventTitle');
+    const coverHostEl = document.getElementById('coverHostName');
+    const coverGuestEl = document.getElementById('coverGuestName');
+    const coverRoleEl = document.getElementById('coverGuestRole');
+    const coverPassEl = document.getElementById('coverGuestPass');
+
+    if (coverTitleEl) coverTitleEl.textContent = state.config.title.toUpperCase();
+    if (coverHostEl) coverHostEl.textContent = state.config.host;
+    if (coverGuestEl) coverGuestEl.textContent = guest.name;
+    if (coverRoleEl) coverRoleEl.textContent = guest.role;
+    if (coverPassEl) coverPassEl.textContent = guest.pass.toUpperCase();
+
     document.getElementById('heroEventTitle').textContent = state.config.title.toUpperCase();
     document.getElementById('heroHostName').textContent = state.config.host;
 
@@ -1259,6 +1271,52 @@
     document.getElementById('publicCountHadir').textContent = String(hadir);
     document.getElementById('publicCountMungkin').textContent = String(mungkin);
     document.getElementById('publicCountTotal').textContent = String(total);
+    renderPublicGuestbook();
+  }
+
+  function renderPublicGuestbook() {
+    const listEl = document.getElementById('publicGuestbookList');
+    const badgeEl = document.getElementById('guestbookCountBadge');
+    if (!listEl) return;
+
+    if (badgeEl) {
+      badgeEl.textContent = `${state.rsvps.length} RESPON TAMU`;
+    }
+
+    if (state.rsvps.length === 0) {
+      listEl.innerHTML = `
+        <div class="guestbook-empty">
+          Belum ada ucapan atau konfirmasi yang masuk. Jadilah tamu pertama yang mengisi Buku Tamu Paddock.
+        </div>
+      `;
+      return;
+    }
+
+    listEl.innerHTML = state.rsvps
+      .map((r) => {
+        const dt = new Date(r.updatedAt);
+        const timeStr = Number.isNaN(dt.getTime())
+          ? 'Baru saja'
+          : dt.toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
+        const msg = r.notes && r.notes.trim()
+          ? r.notes.trim()
+          : `Konfirmasi status kehadiran: ${r.status}${r.sessions && r.sessions.length ? ` (${r.sessions.join(', ')})` : ''}.`;
+
+        return `
+          <article class="guestbook-card" data-status="${escapeHtml(r.status)}">
+            <div class="guestbook-card-top">
+              <div>
+                <div class="guestbook-author">${escapeHtml(r.name)}</div>
+                <div class="guestbook-team">${escapeHtml(r.team || 'Motorsport Guest')}</div>
+              </div>
+              <span class="badge badge-carbon">${escapeHtml(r.status)}</span>
+            </div>
+            <p class="guestbook-msg">${escapeHtml(msg)}</p>
+            <span class="guestbook-time mono">${escapeHtml(timeStr)}</span>
+          </article>
+        `;
+      })
+      .join('');
   }
 
   function renderGuestRsvpReceipt() {
@@ -2481,6 +2539,264 @@
   }
 
   /* ------------------------------------------------------------------------
+     HERO COVER GATE, PHOTO GALLERY, LIGHTBOX & SCROLL REVEAL ANIMATIONS
+     ------------------------------------------------------------------------ */
+  const GALLERY_ITEMS = [
+    {
+      src: 'img/gallery/lusail-floodlit-straight.jpg',
+      title: 'Lintasan Lurus Utama 1,068 KM',
+      desc: 'Percikan titanium di bawah ribuan lampu sorot malam Lusail International Circuit.'
+    },
+    {
+      src: 'img/gallery/lusail-paddock-hospitality.jpg',
+      title: 'Lusail Paddock Club Hospitality',
+      desc: 'Teras pandang VIP tepat di atas garasi tim dan garis start/finish.'
+    },
+    {
+      src: 'img/gallery/lusail-triple-apex.jpg',
+      title: 'Triple-Right-Hander Tikungan 12-14',
+      desc: 'Beban gravitasi lateral 4.8G melewati kerb khas Qatar Maroon dan emas.'
+    },
+    {
+      src: 'img/gallery/f1-starting-grid.jpg',
+      title: 'Spektakel Balap Malam',
+      desc: 'Kontras dramatis antara aspal gelap dan tata cahaya sirkuit berstandar FIA Grade 1.'
+    },
+    {
+      src: 'img/gallery/f1-paddock-garage.jpg',
+      title: 'Fokus Kokpit & Telemetri',
+      desc: 'Konsentrasi penuh pembalap menghadapi suhu malam gurun Qatar selama 57 lap.'
+    },
+    {
+      src: 'img/gallery/f1-pitstop-crew.jpg',
+      title: 'Strategi & Presisi Pit Stop',
+      desc: 'Koordinasi 20 kru mekanik mengeksekusi pergantian ban di bawah 2,5 detik.'
+    }
+  ];
+
+  function initCoverGate() {
+    const cover = document.getElementById('invitationCover');
+    const openBtn = document.getElementById('btnOpenInvitation');
+    if (!cover || !openBtn) return;
+
+    let alreadyOpened = false;
+    try {
+      alreadyOpened = window.sessionStorage && window.sessionStorage.getItem('f1_qatar2026_cover_opened') === '1';
+    } catch (_err) {
+      alreadyOpened = false;
+    }
+
+    if (alreadyOpened || state.previewGuest) {
+      cover.classList.add('hidden');
+      return;
+    }
+
+    document.body.style.overflow = 'hidden';
+
+    openBtn.addEventListener('click', () => {
+      cover.classList.add('is-opening');
+      document.body.style.overflow = '';
+      try {
+        if (window.sessionStorage) {
+          window.sessionStorage.setItem('f1_qatar2026_cover_opened', '1');
+        }
+      } catch (_err) {}
+
+      // Start F1 Official Theme music smoothly when guest clicks "Buka Undangan"
+      let allowMusic = true;
+      try {
+        allowMusic = window.localStorage.getItem(STORAGE_KEYS.AUDIO) !== 'false';
+      } catch (_err) {}
+      const audio = document.getElementById('bgAudio');
+      if (allowMusic && audio && audio.paused && typeof audio.play === 'function') {
+        const p = audio.play();
+        if (p && typeof p.then === 'function') {
+          p.then(() => updateAudioUi(true)).catch(() => {});
+        }
+      }
+
+      window.setTimeout(() => {
+        cover.classList.add('hidden');
+      }, 660);
+    });
+  }
+
+  function initGalleryAndLightbox() {
+    const viewport = document.getElementById('galleryViewport');
+    const track = document.getElementById('galleryTrack');
+    const btnGrid = document.getElementById('btnGalleryGridMode');
+    const btnCarousel = document.getElementById('btnGalleryCarouselMode');
+    const carouselControls = document.getElementById('galleryCarouselControls');
+    const dotsContainer = document.getElementById('galleryCarouselDots');
+    const btnPrev = document.getElementById('btnCarouselPrev');
+    const btnNext = document.getElementById('btnCarouselNext');
+
+    const lightboxModal = document.getElementById('galleryLightboxModal');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxTitle = document.getElementById('lightboxCaptionTitle');
+    const lightboxDesc = document.getElementById('lightboxCaptionDesc');
+    const lightboxCounter = document.getElementById('lightboxCounter');
+    const btnLbPrev = document.getElementById('btnLightboxPrev');
+    const btnLbNext = document.getElementById('btnLightboxNext');
+
+    if (!viewport || !track) return;
+
+    let currentSlide = 0;
+    let activeLightboxIdx = 0;
+
+    if (dotsContainer) {
+      dotsContainer.innerHTML = GALLERY_ITEMS.map(
+        (_item, idx) =>
+          `<button type="button" class="carousel-dot${idx === 0 ? ' active' : ''}" data-carousel-dot="${idx}" aria-label="Lompat ke foto ${idx + 1}"></button>`
+      ).join('');
+    }
+
+    const scrollToCarouselIndex = (index) => {
+      const items = track.querySelectorAll('.gallery-item');
+      if (!items.length) return;
+      currentSlide = (index + items.length) % items.length;
+      const targetEl = items[currentSlide];
+      if (targetEl && typeof targetEl.scrollIntoView === 'function') {
+        targetEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+      if (dotsContainer) {
+        dotsContainer.querySelectorAll('.carousel-dot').forEach((d, i) => {
+          d.classList.toggle('active', i === currentSlide);
+        });
+      }
+    };
+
+    if (btnGrid && btnCarousel && carouselControls) {
+      btnGrid.addEventListener('click', () => {
+        viewport.classList.remove('mode-carousel');
+        viewport.classList.add('mode-grid');
+        btnGrid.classList.add('active');
+        btnCarousel.classList.remove('active');
+        carouselControls.classList.add('hidden');
+      });
+
+      btnCarousel.addEventListener('click', () => {
+        viewport.classList.remove('mode-grid');
+        viewport.classList.add('mode-carousel');
+        btnCarousel.classList.add('active');
+        btnGrid.classList.remove('active');
+        carouselControls.classList.remove('hidden');
+        scrollToCarouselIndex(0);
+      });
+    }
+
+    if (btnPrev) btnPrev.addEventListener('click', () => scrollToCarouselIndex(currentSlide - 1));
+    if (btnNext) btnNext.addEventListener('click', () => scrollToCarouselIndex(currentSlide + 1));
+
+    if (dotsContainer) {
+      dotsContainer.addEventListener('click', (e) => {
+        const dot = e.target.closest('[data-carousel-dot]');
+        if (!dot) return;
+        scrollToCarouselIndex(Number(dot.dataset.carouselDot) || 0);
+      });
+    }
+
+    const showLightboxAt = (idx) => {
+      if (!lightboxModal || !lightboxImg) return;
+      activeLightboxIdx = (idx + GALLERY_ITEMS.length) % GALLERY_ITEMS.length;
+      const item = GALLERY_ITEMS[activeLightboxIdx];
+      lightboxImg.src = item.src;
+      lightboxImg.alt = item.title;
+      if (lightboxTitle) lightboxTitle.textContent = item.title;
+      if (lightboxDesc) lightboxDesc.textContent = item.desc;
+      if (lightboxCounter) lightboxCounter.textContent = `${pad2(activeLightboxIdx + 1)} / ${pad2(GALLERY_ITEMS.length)}`;
+      openModal('galleryLightboxModal');
+    };
+
+    track.addEventListener('click', (e) => {
+      const fig = e.target.closest('[data-gallery-idx]');
+      if (!fig) return;
+      showLightboxAt(Number(fig.dataset.galleryIdx) || 0);
+    });
+
+    if (btnLbPrev) btnLbPrev.addEventListener('click', () => showLightboxAt(activeLightboxIdx - 1));
+    if (btnLbNext) btnLbNext.addEventListener('click', () => showLightboxAt(activeLightboxIdx + 1));
+
+    if (lightboxModal) {
+      lightboxModal.addEventListener('click', (e) => {
+        if (e.target === lightboxModal) closeModal('galleryLightboxModal');
+      });
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightboxModal || lightboxModal.classList.contains('hidden')) return;
+      if (e.key === 'ArrowLeft') showLightboxAt(activeLightboxIdx - 1);
+      if (e.key === 'ArrowRight') showLightboxAt(activeLightboxIdx + 1);
+      if (e.key === 'Escape') closeModal('galleryLightboxModal');
+    });
+
+    // Generic Copy Account / Address buttons with Toast feedback
+    document.querySelectorAll('[data-copy-text]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const val = btn.getAttribute('data-copy-text') || '';
+        const lbl = btn.getAttribute('data-copy-label') || 'Teks';
+        copyTextToClipboard(val, `${lbl} Disalin`, `${val} berhasil disalin ke papan klip.`);
+      });
+    });
+  }
+
+  function initScrollRevealAnimations() {
+    if (typeof window.IntersectionObserver !== 'function') return;
+
+    // Automatically tag major editorial blocks & apply staggered delays inside grids
+    const autoRevealSelectors = [
+      '.hero-editorial',
+      '.countdown-tower',
+      '.formal-letter',
+      '.pass-column',
+      '.schedule-controls',
+      '.schedule-card',
+      '.circuit-metric-card',
+      '.track-diagram-card',
+      '.sector-card',
+      '.map-panel',
+      '.rsvp-form-card',
+      '.paddock-pulse-card',
+      '.protocol-card',
+      '.copy-info-card'
+    ];
+
+    autoRevealSelectors.forEach((sel) => {
+      document.querySelectorAll(sel).forEach((el, idx) => {
+        if (!el.classList.contains('reveal-on-scroll')) {
+          el.classList.add('reveal-on-scroll');
+        }
+        const staggerMs = (idx % 5) * 65;
+        if (el.style) {
+          el.style.setProperty?.('--reveal-delay', `${staggerMs}ms`);
+        }
+      });
+    });
+
+    document.querySelectorAll('.gallery-item.reveal-on-scroll').forEach((el, idx) => {
+      if (el.style) {
+        el.style.setProperty?.('--reveal-delay', `${(idx % 3) * 85}ms`);
+      }
+    });
+
+    document.body.classList.add('scroll-anim-ready');
+
+    const observer = new window.IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -36px 0px' }
+    );
+
+    document.querySelectorAll('.reveal-on-scroll').forEach((el) => observer.observe(el));
+  }
+
+  /* ------------------------------------------------------------------------
      BOOT APPLICATION
      ------------------------------------------------------------------------ */
   function initApp() {
@@ -2492,6 +2808,9 @@
     updateClocksAndCountdown();
     initRsvpInteractions();
     bindEvents();
+    initCoverGate();
+    initGalleryAndLightbox();
+    initScrollRevealAnimations();
     initAudioPlayer();
     initSupabaseConnection(false);
     initLeafletCircuitMap();
