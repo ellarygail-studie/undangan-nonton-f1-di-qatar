@@ -1,0 +1,1349 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Undangan Resmi — Formula 1 Qatar Airways Qatar Grand Prix 2026 (Round 22)</title>
+  <meta name="description" content="Undangan digital resmi Formula 1 Qatar Airways Qatar Grand Prix 2026 (Round 22) di Lusail International Circuit, Qatar (27-29 November 2026). Jadwal WIB, Digital Race Pass, Peta Sirkuit, dan RSVP." />
+  <meta name="theme-color" content="#0B0C0E" />
+
+  <!-- Google Fonts: Oswald, Inter, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Leaflet 1.9.4 CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <!-- Kerb Top Accent Bar -->
+  <div class="kerb-stripe" aria-hidden="true"></div>
+
+  <!-- Top Telemetry & Navigation Header -->
+  <header class="site-header" id="top">
+    <!-- Sticky Admin Preview Banner (Shown only when previewing a specific guest from Admin Panel) -->
+    <div id="previewBanner" class="preview-banner hidden" role="status" aria-live="polite">
+      <div class="container preview-banner-inner">
+        <div class="preview-banner-info">
+          <span class="preview-pill">MODE PRATINJAU TAMU</span>
+          <span class="preview-guest-text">Menampilkan halaman sebagai: <strong id="previewGuestLabel">Tamu Undangan VIP</strong></span>
+        </div>
+        <div class="preview-banner-actions">
+          <button type="button" id="btnBackToAdmin" class="btn btn-gold btn-sm">
+            <i data-lucide="arrow-left"></i>
+            <span>Kembali ke Panel Admin</span>
+          </button>
+          <button type="button" id="btnExitPreview" class="btn btn-outline-light btn-sm">
+            <i data-lucide="x"></i>
+            <span>Reset ke Default</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="telemetry-strip">
+      <div class="container telemetry-strip-inner">
+        <div class="telemetry-left">
+          <span class="telemetry-tag">ROUND 22 // FIA F1 WORLD CHAMPIONSHIP</span>
+          <span class="telemetry-sep" aria-hidden="true">/</span>
+          <span class="telemetry-venue">LUSAIL INTERNATIONAL CIRCUIT, QATAR</span>
+        </div>
+        <div class="telemetry-right">
+          <span class="telemetry-coords mono">25.4900&deg;N 51.4542&deg;E</span>
+          <span class="telemetry-sep" aria-hidden="true">/</span>
+          <span class="telemetry-clock mono" id="liveWibClock">WIB --:--:--</span>
+        </div>
+      </div>
+    </div>
+
+    <nav class="main-nav" aria-label="Navigasi Utama">
+      <div class="container nav-inner">
+        <a href="#top" class="brand-logo">
+          <svg class="brand-mark" viewBox="0 0 44 28" width="40" height="26" aria-hidden="true">
+            <polygon points="4,24 14,4 26,4 16,24" fill="#D91E18" />
+            <polygon points="20,24 30,4 36,4 26,24" fill="#8A1538" />
+            <polygon points="30,24 38,8 42,8 34,24" fill="#D4A017" />
+          </svg>
+          <div class="brand-text">
+            <span class="brand-title">QATAR GP 2026</span>
+            <span class="brand-sub">OFFICIAL PADDOCK INVITATION</span>
+          </div>
+        </a>
+
+        <div class="nav-links" id="navLinks">
+          <a href="#invitation" class="nav-link">Surat &amp; Pass</a>
+          <a href="#schedule" class="nav-link">Jadwal WIB</a>
+          <a href="#circuit" class="nav-link">Sirkuit &amp; Peta</a>
+          <a href="#rsvp" class="nav-link">RSVP</a>
+          <a href="#rsvp" class="btn btn-vermilion btn-sm nav-cta">
+            <i data-lucide="check-square"></i>
+            <span>Konfirmasi Kehadiran</span>
+          </a>
+        </div>
+
+        <button type="button" class="mobile-nav-toggle" id="btnMobileMenu" aria-label="Buka menu navigasi" aria-expanded="false">
+          <i data-lucide="menu"></i>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- =================================================================
+         HERO SECTION — HIGH-CONTRAST PADDOCK TELEMETRY & COUNTDOWN
+         ================================================================= -->
+    <section id="hero" class="hero-section">
+      <div class="hero-grid-overlay" aria-hidden="true"></div>
+      <div class="container hero-layout">
+        <!-- Left Column: Editorial Event Headline & VIP Addressee Card -->
+        <div class="hero-editorial">
+          <div class="eyebrow-row">
+            <span class="badge badge-maroon">QATAR AIRWAYS TITLE PARTNER</span>
+            <span class="badge badge-outline-gold mono">27 &ndash; 29 NOV 2026</span>
+            <span class="badge badge-carbon mono">NIGHT RACE</span>
+          </div>
+
+          <h1 class="hero-title" id="heroEventTitle">
+            FORMULA 1 QATAR AIRWAYS QATAR GRAND PRIX 2026
+          </h1>
+
+          <p class="hero-subtitle" id="heroSubtitle">
+            Undangan resmi akhir pekan balap malam seri ke-22 musim 2026 di Lusail International Circuit. Diselenggarakan oleh <strong id="heroHostName">Paddock Club Indonesia &amp; Lusail Motorsport Hospitality</strong>.
+          </p>
+
+          <!-- Personalized VIP Greeting Card ("Kepada Yang Terhormat") -->
+          <div class="addressee-card" id="vipAddresseeCard">
+            <div class="addressee-card-top">
+              <span class="addressee-label">
+                <i data-lucide="award"></i>
+                <span>KEPADA YANG TERHORMAT</span>
+              </span>
+              <span class="addressee-code mono" id="heroPassCodeBadge">QAT26-R22-VIP</span>
+            </div>
+
+            <div class="addressee-name" id="heroGuestName">Tamu Undangan VIP</div>
+            <div class="addressee-role" id="heroGuestRole">Tamu Kehormatan Paddock &amp; Komunitas Motorsport</div>
+
+            <div class="addressee-meta-grid">
+              <div class="addressee-meta-item">
+                <span class="meta-kicker">KATEGORI AKSES</span>
+                <span class="meta-val" id="heroGuestPass">Paddock Club VIP</span>
+              </div>
+              <div class="addressee-meta-item">
+                <span class="meta-kicker">TRIBUN / ZONA</span>
+                <span class="meta-val" id="heroGuestTribun">Main Grandstand &mdash; Zona A</span>
+              </div>
+            </div>
+
+            <div class="addressee-actions">
+              <a href="#invitation" class="btn btn-vermilion">
+                <i data-lucide="ticket"></i>
+                <span>Buka Digital Race Pass</span>
+              </a>
+              <a href="#schedule" class="btn btn-outline-light">
+                <i data-lucide="clock"></i>
+                <span>Lihat Jadwal WIB</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Real-Time Telemetry Countdown Tower -->
+        <aside class="countdown-tower" aria-label="Hitung Mundur Sesi Balap">
+          <div class="tower-header">
+            <div class="tower-status" id="countdownStatusWrap">
+              <span class="status-dot" id="countdownStatusDot"></span>
+              <span class="status-label mono" id="countdownStatusText">MENUJU SESI TERDEKAT</span>
+            </div>
+            <span class="tower-round mono">R22 // LUSAIL</span>
+          </div>
+
+          <div class="tower-selector-group">
+            <label for="countdownTargetSelect" class="selector-label">
+              <i data-lucide="crosshair"></i>
+              <span>TARGET HITUNG MUNDUR SESI</span>
+            </label>
+            <div class="select-wrapper">
+              <select id="countdownTargetSelect" class="form-select form-select-dark mono">
+                <option value="auto">Otomatis (Sesi Terdekat)</option>
+                <option value="fp1">FP1 &mdash; Free Practice 1</option>
+                <option value="fp2">FP2 &mdash; Free Practice 2</option>
+                <option value="fp3">FP3 &mdash; Free Practice 3</option>
+                <option value="quali">Qualifying &mdash; Kualifikasi</option>
+                <option value="race">Grand Prix Race (57 Lap)</option>
+              </select>
+              <i data-lucide="chevron-down" class="select-icon"></i>
+            </div>
+          </div>
+
+          <div class="tower-session-focus">
+            <div class="focus-session-kicker">SESI AKTIF / TARGET</div>
+            <div class="focus-session-name" id="countdownSessionTitle">FP1 &mdash; FREE PRACTICE 1</div>
+            <div class="focus-session-times">
+              <span class="focus-time-wib mono" id="countdownSessionWib">Jumat, 27 Nov 2026 | 20:30 &ndash; 21:30 WIB</span>
+              <span class="focus-time-ast mono" id="countdownSessionAst">Waktu Sirkuit: 16:30 &ndash; 17:30 AST (UTC+3)</span>
+            </div>
+          </div>
+
+          <div class="countdown-digits-grid" role="timer" aria-live="off">
+            <div class="digit-box">
+              <span class="digit-value mono" id="cdDays">00</span>
+              <span class="digit-label">HARI</span>
+            </div>
+            <div class="digit-box">
+              <span class="digit-value mono" id="cdHours">00</span>
+              <span class="digit-label">JAM</span>
+            </div>
+            <div class="digit-box">
+              <span class="digit-value mono" id="cdMinutes">00</span>
+              <span class="digit-label">MENIT</span>
+            </div>
+            <div class="digit-box digit-box-accent">
+              <span class="digit-value mono" id="cdSeconds">00</span>
+              <span class="digit-label">DETIK</span>
+            </div>
+          </div>
+
+          <!-- Weekend Telemetry Progression Bar -->
+          <div class="tower-progression">
+            <div class="progression-label-row">
+              <span class="mono">PROGRES AKHIR PEKAN BALAP</span>
+              <span class="mono" id="weekendProgressSummary">5 SESI RESMI</span>
+            </div>
+            <div class="progression-track" id="weekendStepsTrack">
+              <!-- Populated dynamically: FP1, FP2, FP3, QUALI, RACE -->
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- =================================================================
+         SECTION 01 — FORMAL INVITATION LETTER & DIGITAL RACE PASS
+         (Warm Stone #F4F3EE & Paper #FAFAF8 Editorial High-Contrast)
+         ================================================================= -->
+    <section id="invitation" class="section section-light">
+      <div class="container">
+        <div class="section-heading-bar">
+          <div class="section-index mono">01 // OFFICIAL HOSPITALITY DOSSIER</div>
+          <div class="section-heading-main">
+            <h2 class="section-title">SURAT UNDANGAN RESMI &amp; DIGITAL RACE PASS</h2>
+            <p class="section-desc">Dokumen akreditasi personal untuk akses acara menonton bersama dan hospitality akhir pekan Formula 1 Qatar Grand Prix 2026.</p>
+          </div>
+        </div>
+
+        <div class="dossier-layout">
+          <!-- Formal Invitation Letter on #FAFAF8 Paper -->
+          <article class="formal-letter" aria-label="Surat Undangan Resmi">
+            <div class="letter-masthead">
+              <div>
+                <div class="letter-kicker mono">DOKUMEN RESMI PENYELENGGARA</div>
+                <div class="letter-doc-no mono" id="letterDocId">REF: FIA-F1-QAT26/R22/INV</div>
+              </div>
+              <div class="letter-seal">
+                <span class="seal-round mono">ROUND 22</span>
+                <span class="seal-country">LUSAIL &bull; QATAR</span>
+              </div>
+            </div>
+
+            <div class="letter-recipient-box">
+              <div class="recipient-prefix">Kepada Yang Terhormat,</div>
+              <h3 class="recipient-name" id="letterGuestName">Tamu Undangan VIP</h3>
+              <div class="recipient-role" id="letterGuestRole">Tamu Kehormatan Paddock &amp; Komunitas Motorsport</div>
+            </div>
+
+            <div class="letter-body">
+              <p>Dengan hormat,</p>
+              <p>
+                Melalui undangan resmi ini, <strong id="letterHostInline">Paddock Club Indonesia &amp; Lusail Motorsport Hospitality</strong> mengundang Anda untuk hadir dan menyaksikan secara langsung puncak persaingan malam hari <strong id="letterTitleInline">Formula 1 Qatar Airways Qatar Grand Prix 2026 (Round 22)</strong> yang digelar di bawah cahaya lampu sorot <strong>Lusail International Circuit, Qatar</strong> pada tanggal <strong>27 hingga 29 November 2026</strong>.
+              </p>
+              <p>
+                Sebagai seri penentu menjelang penutupan musim kejuaraan dunia 2026, lintasan sepanjang 5,419 kilometer dengan 16 tikungan berkecepatan tinggi di Lusail menjanjikan duel strategi ban dan aerodinamika tingkat tinggi selama 57 putaran penuh.
+              </p>
+            </div>
+
+            <div class="letter-specs-grid">
+              <div class="letter-spec">
+                <span class="spec-label">AGENDA UTAMA</span>
+                <span class="spec-value" id="letterEventTitle">Formula 1 Qatar Airways Qatar Grand Prix 2026</span>
+              </div>
+              <div class="letter-spec">
+                <span class="spec-label">PENYELENGGARA</span>
+                <span class="spec-value" id="letterHost">Paddock Club Indonesia &amp; Lusail Motorsport Hospitality</span>
+              </div>
+              <div class="letter-spec">
+                <span class="spec-label">BALAPAN UTAMA (RACE)</span>
+                <span class="spec-value mono" id="letterRaceSchedule">Minggu, 29 Nov 2026 | 23:00 - 01:00 WIB</span>
+              </div>
+              <div class="letter-spec">
+                <span class="spec-label">DRESS CODE</span>
+                <span class="spec-value" id="letterDressCode">Smart Motorsport Casual / Team Apparel Resmi</span>
+              </div>
+              <div class="letter-spec">
+                <span class="spec-label">KATEGORI PASS</span>
+                <span class="spec-value" id="letterPassCategory">Paddock Club VIP</span>
+              </div>
+              <div class="letter-spec">
+                <span class="spec-label">ZONA &amp; TRIBUN</span>
+                <span class="spec-value" id="letterTribun">Main Grandstand &mdash; Zona A</span>
+              </div>
+            </div>
+
+            <div class="letter-footer">
+              <div class="letter-signature">
+                <span class="sig-label">Hormat Kami,</span>
+                <span class="sig-org" id="letterSignatureHost">Komite Penyelenggara &mdash; Paddock Hospitality</span>
+                <span class="sig-sub mono">TERVERIFIKASI SISTEM AKREDITASI DIGITAL</span>
+              </div>
+              <div class="letter-verification mono">
+                <span>STATUS: VALID</span>
+                <span id="letterPassCodeRef">PASS: QAT26-R22-VIP</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- Digital Race Pass Credential Card -->
+          <aside class="pass-column" aria-label="Kartu Digital Race Pass">
+            <div class="race-pass-card" id="digitalRacePass" data-tier="vip">
+              <!-- Lanyard Slot Top -->
+              <div class="pass-lanyard-bar" aria-hidden="true">
+                <span class="lanyard-slot"></span>
+              </div>
+
+              <!-- Pass Ribbon Header -->
+              <div class="pass-ribbon">
+                <div class="pass-ribbon-left">
+                  <span class="pass-f1-kicker mono">FORMULA 1 // ROUND 22</span>
+                  <span class="pass-gp-name">QATAR GRAND PRIX 2026</span>
+                </div>
+                <span class="pass-tier-pill" id="passTierBadge">PADDOCK CLUB VIP</span>
+              </div>
+
+              <!-- Pass Body -->
+              <div class="pass-body">
+                <!-- Subtle Circuit Silhouette Watermark -->
+                <svg class="pass-watermark" viewBox="0 0 260 180" aria-hidden="true">
+                  <path d="M44,142 L205,142 C222,142 228,125 215,112 L175,88 C164,81 168,66 182,62 L212,54 C226,50 225,32 208,28 L145,22 C130,21 124,35 132,46 L146,66 C152,75 140,86 129,78 L104,56 C92,46 76,54 80,69 L92,102 C95,112 82,120 73,112 L52,92 C40,82 24,92 28,108 L34,132 C36,139 40,142 44,142 Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" />
+                </svg>
+
+                <div class="pass-holder-section">
+                  <span class="pass-field-label">PEMEGANG AKREDITASI // HOLDER</span>
+                  <div class="pass-holder-name" id="passGuestName">Tamu Undangan VIP</div>
+                  <div class="pass-holder-role" id="passGuestRole">Tamu Kehormatan Paddock &amp; Komunitas Motorsport</div>
+                </div>
+
+                <div class="pass-telemetry-grid">
+                  <div class="pass-cell">
+                    <span class="pass-field-label">TRIBUN / SEATING</span>
+                    <span class="pass-cell-val" id="passGuestTribun">Main Grandstand &mdash; Zona A</span>
+                  </div>
+                  <div class="pass-cell">
+                    <span class="pass-field-label">GATE / ZONA AKSES</span>
+                    <span class="pass-cell-val mono" id="passGateAccess">GATE 01 // VIP PADDOCK</span>
+                  </div>
+                  <div class="pass-cell">
+                    <span class="pass-field-label">TANGGAL AKTIF</span>
+                    <span class="pass-cell-val mono">27 &ndash; 29 NOV 2026</span>
+                  </div>
+                  <div class="pass-cell">
+                    <span class="pass-field-label">LIGHTS OUT (WIB)</span>
+                    <span class="pass-cell-val mono" id="passLightsOutWib">29 NOV // 23:00 WIB</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Perforated Divider -->
+              <div class="pass-perforation" aria-hidden="true">
+                <span class="notch notch-left"></span>
+                <span class="perforation-line"></span>
+                <span class="notch notch-right"></span>
+              </div>
+
+              <!-- Deterministic Pass Code & Barcode -->
+              <div class="pass-barcode-zone">
+                <div class="barcode-meta-row">
+                  <span class="barcode-label mono">PASS ID DETERMINISTIK</span>
+                  <span class="barcode-code mono" id="passCodeDisplay">QAT26-R22-0000-VIP</span>
+                </div>
+                <div class="barcode-svg-wrap" aria-label="Barcode Kredensial Digital">
+                  <svg id="passBarcodeSvg" class="barcode-svg" viewBox="0 0 320 56" preserveAspectRatio="none" role="img" aria-label="Digital Pass Barcode"></svg>
+                </div>
+                <div class="barcode-sub mono">LUSAIL INTERNATIONAL CIRCUIT &bull; NON-TRANSFERABLE CREDENTIAL</div>
+              </div>
+            </div>
+
+            <!-- Pass Actions -->
+            <div class="pass-utility-actions">
+              <button type="button" id="btnCopyPassCode" class="btn btn-carbon btn-block">
+                <i data-lucide="copy"></i>
+                <span>Salin Kode Pass</span>
+              </button>
+              <button type="button" id="btnPrintPass" class="btn btn-outline-dark btn-block">
+                <i data-lucide="printer"></i>
+                <span>Cetak Pass</span>
+              </button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================
+         SECTION 02 — OFFICIAL SCHEDULE IN WIB (UTC+7) + AST TOGGLE & ICS
+         (Carbon #0B0C0E & Tarmac #14161A)
+         ================================================================= -->
+    <section id="schedule" class="section section-dark">
+      <div class="container">
+        <div class="section-heading-bar section-heading-dark">
+          <div class="section-index mono">02 // OFFICIAL WEEKEND TIMETABLE</div>
+          <div class="section-heading-main">
+            <h2 class="section-title">JADWAL RESMI AKHIR PEKAN (FORMAT WIB)</h2>
+            <p class="section-desc">Seluruh jadwal sesi ditampilkan dalam Waktu Indonesia Barat (WIB / UTC+7) dengan referensi waktu lokal sirkuit Qatar (AST / UTC+3) serta unduhan kalender otomatis.</p>
+          </div>
+        </div>
+
+        <!-- Schedule Controls Bar -->
+        <div class="schedule-controls">
+          <!-- Day Filter Tabs -->
+          <div class="day-filter-group" role="tablist" aria-label="Filter Hari Sesi">
+            <button type="button" class="day-filter-btn active" data-day="all" role="tab" aria-selected="true">
+              <span>Semua</span>
+              <span class="filter-count mono" id="countAll">5</span>
+            </button>
+            <button type="button" class="day-filter-btn" data-day="jumat" role="tab" aria-selected="false">
+              <span>Jumat</span>
+              <span class="filter-count mono" id="countJumat">1</span>
+            </button>
+            <button type="button" class="day-filter-btn" data-day="sabtu" role="tab" aria-selected="false">
+              <span>Sabtu</span>
+              <span class="filter-count mono" id="countSabtu">2</span>
+            </button>
+            <button type="button" class="day-filter-btn" data-day="minggu" role="tab" aria-selected="false">
+              <span>Minggu</span>
+              <span class="filter-count mono" id="countMinggu">2</span>
+            </button>
+          </div>
+
+          <!-- Right Actions: AST Reference Toggle & Download All .ics -->
+          <div class="schedule-utility-group">
+            <button type="button" id="btnToggleAst" class="ast-toggle-btn active" aria-pressed="true">
+              <i data-lucide="globe"></i>
+              <span>Referensi Waktu Qatar (AST / UTC+3): <strong id="astToggleStateText">Tampil</strong></span>
+            </button>
+            <button type="button" id="btnDownloadAllIcs" class="btn btn-gold btn-sm">
+              <i data-lucide="calendar-plus"></i>
+              <span>Unduh Semua Sesi (.ics)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Schedule Cards Container -->
+        <div id="scheduleCardsContainer" class="schedule-list" aria-live="polite">
+          <!-- Populated dynamically by js/app.js -->
+        </div>
+
+        <div class="schedule-footnote">
+          <i data-lucide="info"></i>
+          <span>Catatan Zona Waktu: Waktu Indonesia Barat (WIB, UTC+7) lebih cepat 4 jam dibandingkan Arabia Standard Time (AST, UTC+3) di Lusail, Qatar. Sesi dini hari WIB (FP2 &amp; Qualifying) berlangsung pada malam hari sebelumnya waktu lokal Qatar.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================
+         SECTION 03 — CIRCUIT PROFILE, ICONIC SECTORS & LEAFLET MAP
+         (Warm Stone #F4F3EE & Paper #FAFAF8)
+         ================================================================= -->
+    <section id="circuit" class="section section-light">
+      <div class="container">
+        <div class="section-heading-bar">
+          <div class="section-index mono">03 // CIRCUIT TELEMETRY &amp; NAVIGATION</div>
+          <div class="section-heading-main">
+            <h2 class="section-title">PROFIL SIRKUIT &amp; PETA INTERAKTIF LUSAIL</h2>
+            <p class="section-desc">Data teknis resmi Lusail International Circuit, karakteristik tiga sektor cepat gurun Qatar, dan peta navigasi interaktif menuju area sirkuit.</p>
+          </div>
+        </div>
+
+        <!-- 5 Official Circuit Specification Cards -->
+        <div class="circuit-specs-strip">
+          <div class="circuit-metric-card">
+            <span class="metric-kicker">PANJANG LINTASAN</span>
+            <span class="metric-number mono">5,419 <small>km</small></span>
+            <span class="metric-note">Lurus Utama: 1,068 km (Zona DRS)</span>
+          </div>
+          <div class="circuit-metric-card">
+            <span class="metric-kicker">JUMLAH TIKUNGAN</span>
+            <span class="metric-number mono">16</span>
+            <span class="metric-note">10 Tikungan Kanan &bull; 6 Tikungan Kiri</span>
+          </div>
+          <div class="circuit-metric-card">
+            <span class="metric-kicker">JUMLAH PUTARAN</span>
+            <span class="metric-number mono">57 <small>Lap</small></span>
+            <span class="metric-note">Balapan Malam Penuh Lampu Sorot</span>
+          </div>
+          <div class="circuit-metric-card">
+            <span class="metric-kicker">JARAK BALAPAN</span>
+            <span class="metric-number mono">308,611 <small>km</small></span>
+            <span class="metric-note">Homologasi Resmi FIA Grade 1</span>
+          </div>
+          <div class="circuit-metric-card circuit-metric-highlight">
+            <span class="metric-kicker">REKOR LAP BALAP</span>
+            <span class="metric-number mono">1:22.384</span>
+            <span class="metric-note">Lando Norris (2024 &bull; McLaren)</span>
+          </div>
+        </div>
+
+        <!-- Technical Track Vector + Iconic Sectors Breakdown -->
+        <div class="circuit-analysis-grid">
+          <!-- Interactive SVG Circuit Diagram -->
+          <div class="track-diagram-card">
+            <div class="track-diagram-header">
+              <div>
+                <span class="diagram-kicker mono">LAYOUT TELEMETRI // CLOCKWISE</span>
+                <h3 class="diagram-title">DIAGRAM SEKTOR LUSAIL CIRCUIT</h3>
+              </div>
+              <span class="diagram-badge mono" id="activeSectorBadge">SEMUA SEKTOR</span>
+            </div>
+
+            <div class="track-svg-stage">
+              <svg id="lusailTrackSvg" viewBox="0 0 560 360" class="lusail-svg" role="img" aria-label="Diagram 16 Tikungan Lusail International Circuit">
+                <defs>
+                  <pattern id="telemetryGrid" width="28" height="28" patternUnits="userSpaceOnUse">
+                    <path d="M 28 0 L 0 0 0 28" fill="none" stroke="rgba(244,243,238,0.06)" stroke-width="1" />
+                  </pattern>
+                </defs>
+                <rect width="560" height="360" fill="url(#telemetryGrid)" />
+
+                <!-- Base Track Asphalt Shadow -->
+                <path d="M 110,295 L 430,295 C 462,295 472,268 452,248 L 372,196 C 354,184 360,158 382,152 L 444,136 C 470,128 468,94 438,86 L 315,62 C 288,58 275,82 290,104 L 320,145 C 330,160 308,180 290,164 L 235,112 C 215,92 184,106 192,134 L 218,212 C 224,230 198,244 182,228 L 132,182 C 110,162 80,180 86,212 L 96,274 C 98,288 103,295 110,295 Z"
+                      fill="none" stroke="#242830" stroke-width="18" stroke-linejoin="round" stroke-linecap="round" />
+
+                <!-- Sector 1: Start/Finish Straight -> Turn 1 to Turn 5 (Vermilion Red) -->
+                <path id="svgSector1" class="track-sector-path" data-sector="1"
+                      d="M 255,295 L 430,295 C 462,295 472,268 452,248 L 372,196 C 354,184 360,158 382,152 L 444,136"
+                      fill="none" stroke="#D91E18" stroke-width="7" stroke-linejoin="round" stroke-linecap="round" />
+
+                <!-- Sector 2: Turn 6 Hairpin -> Technical Infield Turns 7-11 (Kerb Gold) -->
+                <path id="svgSector2" class="track-sector-path" data-sector="2"
+                      d="M 444,136 C 470,128 468,94 438,86 L 315,62 C 288,58 275,82 290,104 L 320,145 C 330,160 308,180 290,164 L 235,112 C 215,92 184,106 192,134 L 210,188"
+                      fill="none" stroke="#D4A017" stroke-width="7" stroke-linejoin="round" stroke-linecap="round" />
+
+                <!-- Sector 3: High-Speed Triple Right T12-14 -> T15 -> T16 -> Finish (Qatar Maroon / Bright Rose Edge) -->
+                <path id="svgSector3" class="track-sector-path" data-sector="3"
+                      d="M 210,188 L 218,212 C 224,230 198,244 182,228 L 132,182 C 110,162 80,180 86,212 L 96,274 C 98,288 103,295 110,295 L 255,295"
+                      fill="none" stroke="#C82354" stroke-width="7" stroke-linejoin="round" stroke-linecap="round" />
+
+                <!-- Start / Finish Line Marker -->
+                <line x1="255" y1="281" x2="255" y2="309" stroke="#FAFAF8" stroke-width="4" />
+                <rect x="230" y="315" width="52" height="18" rx="2" fill="#FAFAF8" />
+                <text x="256" y="328" text-anchor="middle" fill="#0B0C0E" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700">S / F</text>
+
+                <!-- DRS Straight Indicator -->
+                <line x1="285" y1="276" x2="410" y2="276" stroke="#D4A017" stroke-width="2" stroke-dasharray="5,4" />
+                <text x="348" y="269" text-anchor="middle" fill="#D4A017" font-family="JetBrains Mono, monospace" font-size="10" font-weight="600">ZONA DRS // 1.068 M</text>
+
+                <!-- Key Turn Callouts -->
+                <g class="turn-markers" font-family="JetBrains Mono, monospace" font-size="10" font-weight="700">
+                  <circle cx="460" cy="272" r="11" fill="#0B0C0E" stroke="#D91E18" stroke-width="2" />
+                  <text x="460" y="276" text-anchor="middle" fill="#FAFAF8">T1</text>
+
+                  <circle cx="462" cy="110" r="11" fill="#0B0C0E" stroke="#D4A017" stroke-width="2" />
+                  <text x="462" y="114" text-anchor="middle" fill="#FAFAF8">T6</text>
+
+                  <circle cx="298" cy="68" r="12" fill="#0B0C0E" stroke="#D4A017" stroke-width="2" />
+                  <text x="298" y="72" text-anchor="middle" fill="#FAFAF8">T10</text>
+
+                  <circle cx="118" cy="168" r="15" fill="#0B0C0E" stroke="#C82354" stroke-width="2" />
+                  <text x="118" y="172" text-anchor="middle" fill="#FAFAF8">T12-14</text>
+
+                  <circle cx="96" cy="288" r="12" fill="#0B0C0E" stroke="#C82354" stroke-width="2" />
+                  <text x="96" y="292" text-anchor="middle" fill="#FAFAF8">T16</text>
+                </g>
+              </svg>
+            </div>
+
+            <div class="track-legend-bar">
+              <button type="button" class="sector-pill active" data-sector-select="all">Semua</button>
+              <button type="button" class="sector-pill sector-pill-s1" data-sector-select="1">Sektor 1 (T1&ndash;T5)</button>
+              <button type="button" class="sector-pill sector-pill-s2" data-sector-select="2">Sektor 2 (T6&ndash;T11)</button>
+              <button type="button" class="sector-pill sector-pill-s3" data-sector-select="3">Sektor 3 (T12&ndash;T16)</button>
+            </div>
+          </div>
+
+          <!-- 3 Iconic Sector Descriptions -->
+          <div class="iconic-sectors-list">
+            <div class="sector-card" data-sector-card="1">
+              <div class="sector-card-head">
+                <span class="sector-tag sector-tag-s1 mono">SEKTOR 01 // T1 &ndash; T5</span>
+                <span class="sector-telemetry mono">TOP SPEED ~342 KM/J</span>
+              </div>
+              <h4 class="sector-card-title">Lurus Utama DRS &amp; Pengereman Keras Turn 1</h4>
+              <p class="sector-card-desc">
+                Lintasan lurus sepanjang 1,068 km menjadi satu-satunya zona aktivasi DRS utama menuju pengereman berat di Tikungan 1. Setelah keluar dari T1, pembalap langsung disambut tikungan mengalir cepat T2 hingga T5 yang menuntut keseimbangan downforce depan.
+              </p>
+            </div>
+
+            <div class="sector-card" data-sector-card="2">
+              <div class="sector-card-head">
+                <span class="sector-tag sector-tag-s2 mono">SEKTOR 02 // T6 &ndash; T11</span>
+                <span class="sector-telemetry mono">APEX MIN ~95 KM/J</span>
+              </div>
+              <h4 class="sector-card-title">Hairpin Lambat Turn 6 &amp; Kombinasi Double-Apex</h4>
+              <p class="sector-card-desc">
+                Tikungan 6 adalah titik paling lambat di Lusail dan membuka peluang manuver dive-bomb dari sisi dalam. Selepas T6, kombinasi teknis T7 hingga T10 menguji traksi mekanis dan menjaga temperatur ban depan kiri dari gejala graining.
+              </p>
+            </div>
+
+            <div class="sector-card" data-sector-card="3">
+              <div class="sector-card-head">
+                <span class="sector-tag sector-tag-s3 mono">SEKTOR 03 // T12 &ndash; T16</span>
+                <span class="sector-telemetry mono">BEBAN LATERAL 4.8 G</span>
+              </div>
+              <h4 class="sector-card-title">Triple-Right-Hander Ikonik (Tikungan 12&ndash;13&ndash;14)</h4>
+              <p class="sector-card-desc">
+                Bagian paling legendaris di Lusail: rangkaian tiga tikungan kanan cepat beruntun yang dilibas hampir penuh (flat-out) dengan gaya gravitasi lateral ekstrem sebelum menutup putaran lewat pengereman presisi di Tikungan 16 menuju garis finis.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leaflet Interactive Map Panel -->
+        <div class="map-panel">
+          <div class="map-toolbar">
+            <div class="map-toolbar-info">
+              <div class="map-kicker mono">LOKASI PRESISI // KOORDINAT 25.49, 51.45417</div>
+              <h3 class="map-title">PETA INTERAKTIF LUSAIL INTERNATIONAL CIRCUIT</h3>
+            </div>
+
+            <div class="map-toolbar-actions">
+              <div class="layer-toggle-group" role="group" aria-label="Pilih Layer Peta">
+                <button type="button" id="btnMapStreet" class="layer-btn active">
+                  <i data-lucide="map"></i>
+                  <span>Peta Jalan</span>
+                </button>
+                <button type="button" id="btnMapTopo" class="layer-btn">
+                  <i data-lucide="mountain"></i>
+                  <span>Topografi</span>
+                </button>
+                <button type="button" id="btnMapRecenter" class="layer-btn" title="Pusatkan kembali ke sirkuit">
+                  <i data-lucide="locate-fixed"></i>
+                  <span>Pusatkan</span>
+                </button>
+              </div>
+
+              <a href="https://www.google.com/maps/dir/?api=1&destination=25.49,51.45417" target="_blank" rel="noopener noreferrer" class="btn btn-vermilion btn-sm" id="btnGoogleMaps">
+                <i data-lucide="navigation"></i>
+                <span>Rute Google Maps</span>
+              </a>
+            </div>
+          </div>
+
+          <div id="circuitMap" class="circuit-map-canvas" role="region" aria-label="Peta Lusail International Circuit"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =================================================================
+         SECTION 04 — INTERACTIVE GUEST RSVP
+         (Carbon #0B0C0E & Tarmac #14161A)
+         ================================================================= -->
+    <section id="rsvp" class="section section-dark">
+      <div class="container">
+        <div class="section-heading-bar section-heading-dark">
+          <div class="section-index mono">04 // PADDOCK ATTENDANCE CONFIRMATION</div>
+          <div class="section-heading-main">
+            <h2 class="section-title">KONFIRMASI KEHADIRAN (RSVP)</h2>
+            <p class="section-desc">Konfirmasikan kehadiran Anda, pilih sesi akhir pekan yang akan diikuti, dan tentukan konstruktor dukungan Anda musim ini.</p>
+          </div>
+        </div>
+
+        <div class="rsvp-layout">
+          <!-- RSVP Form -->
+          <form id="rsvpForm" class="rsvp-form-card" novalidate>
+            <div class="form-row">
+              <label for="rsvpName" class="form-label">NAMA LENGKAP TAMU <span class="req">*</span></label>
+              <input type="text" id="rsvpName" name="name" class="form-input form-input-dark" placeholder="Masukkan nama lengkap Anda" required maxlength="100" />
+            </div>
+
+            <div class="form-row">
+              <span class="form-label">STATUS KEHADIRAN <span class="req">*</span></span>
+              <div class="status-radio-grid" role="radiogroup" aria-label="Status Kehadiran">
+                <label class="status-radio-card">
+                  <input type="radio" name="rsvpStatus" value="Hadir" checked />
+                  <span class="status-radio-inner">
+                    <i data-lucide="check-circle-2"></i>
+                    <span class="status-radio-title">Hadir</span>
+                    <span class="status-radio-sub">Siap di Paddock</span>
+                  </span>
+                </label>
+
+                <label class="status-radio-card">
+                  <input type="radio" name="rsvpStatus" value="Mungkin" />
+                  <span class="status-radio-inner">
+                    <i data-lucide="help-circle"></i>
+                    <span class="status-radio-title">Mungkin</span>
+                    <span class="status-radio-sub">Menunggu Jadwal</span>
+                  </span>
+                </label>
+
+                <label class="status-radio-card">
+                  <input type="radio" name="rsvpStatus" value="Tidak Hadir" />
+                  <span class="status-radio-inner">
+                    <i data-lucide="x-circle"></i>
+                    <span class="status-radio-title">Tidak Hadir</span>
+                    <span class="status-radio-sub">Berhalangan</span>
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-row" id="rsvpSessionsGroup">
+              <div class="form-label-flex">
+                <span class="form-label">SESI YANG DIIKUTI (WIB)</span>
+                <div class="session-quick-btns">
+                  <button type="button" id="btnSelectAllSessions" class="link-btn mono">Pilih Semua</button>
+                  <span class="sep-dot">&bull;</span>
+                  <button type="button" id="btnClearSessions" class="link-btn mono">Kosongkan</button>
+                </div>
+              </div>
+              <div class="session-checkbox-grid">
+                <label class="session-check-item">
+                  <input type="checkbox" name="rsvpSessions" value="FP1" />
+                  <span class="session-check-box">
+                    <span class="session-check-code mono">FP1</span>
+                    <span class="session-check-meta">Jum &bull; <span data-rsvp-session-time="fp1" class="mono">20:30</span></span>
+                  </span>
+                </label>
+                <label class="session-check-item">
+                  <input type="checkbox" name="rsvpSessions" value="FP2" />
+                  <span class="session-check-box">
+                    <span class="session-check-code mono">FP2</span>
+                    <span class="session-check-meta">Sab &bull; <span data-rsvp-session-time="fp2" class="mono">00:00</span></span>
+                  </span>
+                </label>
+                <label class="session-check-item">
+                  <input type="checkbox" name="rsvpSessions" value="FP3" />
+                  <span class="session-check-box">
+                    <span class="session-check-code mono">FP3</span>
+                    <span class="session-check-meta">Sab &bull; <span data-rsvp-session-time="fp3" class="mono">21:30</span></span>
+                  </span>
+                </label>
+                <label class="session-check-item">
+                  <input type="checkbox" name="rsvpSessions" value="Qualifying" checked />
+                  <span class="session-check-box">
+                    <span class="session-check-code mono">QUALI</span>
+                    <span class="session-check-meta">Min &bull; <span data-rsvp-session-time="quali" class="mono">01:00</span></span>
+                  </span>
+                </label>
+                <label class="session-check-item session-check-race">
+                  <input type="checkbox" name="rsvpSessions" value="Grand Prix Race" checked />
+                  <span class="session-check-box">
+                    <span class="session-check-code mono">RACE (57L)</span>
+                    <span class="session-check-meta">Min &bull; <span data-rsvp-session-time="race" class="mono">23:00</span></span>
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label for="rsvpTeam" class="form-label">TIM / KONSTRUKTOR DUKUNGAN 2026</label>
+              <div class="select-wrapper">
+                <select id="rsvpTeam" name="team" class="form-select form-select-dark">
+                  <option value="McLaren Formula 1 Team">McLaren Formula 1 Team</option>
+                  <option value="Scuderia Ferrari">Scuderia Ferrari</option>
+                  <option value="Oracle Red Bull Racing">Oracle Red Bull Racing</option>
+                  <option value="Mercedes-AMG PETRONAS F1 Team">Mercedes-AMG PETRONAS F1 Team</option>
+                  <option value="Aston Martin Aramco F1 Team">Aston Martin Aramco F1 Team</option>
+                  <option value="Atlassian Williams Racing">Atlassian Williams Racing</option>
+                  <option value="Audi F1 Team">Audi F1 Team</option>
+                  <option value="BWT Alpine F1 Team">BWT Alpine F1 Team</option>
+                  <option value="Visa Cash App Racing Bulls">Visa Cash App Racing Bulls</option>
+                  <option value="MoneyGram Haas F1 Team">MoneyGram Haas F1 Team</option>
+                  <option value="Cadillac Formula 1 Team">Cadillac Formula 1 Team</option>
+                  <option value="Netral / Penikmat Motorsport">Netral / Penikmat Motorsport</option>
+                </select>
+                <i data-lucide="chevron-down" class="select-icon"></i>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <label for="rsvpNotes" class="form-label">CATATAN KHUSUS / PREFERENSI HOSPITALITY</label>
+              <textarea id="rsvpNotes" name="notes" rows="3" class="form-textarea form-input-dark" placeholder="Contoh: Hadir bersama rekan komunitas, kebutuhan parkir khusus, atau preferensi hidangan malam..." maxlength="350"></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-vermilion btn-lg btn-block">
+                <i data-lucide="send"></i>
+                <span id="rsvpSubmitText">Simpan Konfirmasi RSVP</span>
+              </button>
+            </div>
+          </form>
+
+          <!-- Right Column: Guest RSVP Receipt + Live Paddock Briefing -->
+          <aside class="rsvp-sidebar">
+            <!-- Dynamic Saved RSVP Receipt (Visible when guest submits RSVP) -->
+            <div id="rsvpReceiptCard" class="rsvp-receipt-card hidden" aria-live="polite">
+              <div class="receipt-head">
+                <span class="badge badge-gold">TERKONFIRMASI DI SISTEM</span>
+                <span class="mono receipt-time" id="receiptTimestamp">--</span>
+              </div>
+              <h3 class="receipt-title">BUKTI KONFIRMASI RSVP ANDA</h3>
+              <div class="receipt-details">
+                <div class="receipt-row">
+                  <span>Nama Tamu</span>
+                  <strong id="receiptName">-</strong>
+                </div>
+                <div class="receipt-row">
+                  <span>Status</span>
+                  <strong id="receiptStatus">-</strong>
+                </div>
+                <div class="receipt-row">
+                  <span>Sesi Diikuti</span>
+                  <strong id="receiptSessions" class="mono">-</strong>
+                </div>
+                <div class="receipt-row">
+                  <span>Tim Dukungan</span>
+                  <strong id="receiptTeam">-</strong>
+                </div>
+                <div class="receipt-row" id="receiptNotesRow">
+                  <span>Catatan</span>
+                  <strong id="receiptNotes">-</strong>
+                </div>
+              </div>
+            </div>
+
+            <!-- Live Community RSVP Summary Box -->
+            <div class="paddock-pulse-card">
+              <div class="pulse-header">
+                <i data-lucide="bar-chart-3"></i>
+                <span>STATISTIK KEHADIRAN TAMU</span>
+              </div>
+              <div class="pulse-counters">
+                <div class="pulse-stat">
+                  <span class="pulse-num mono" id="publicCountHadir">0</span>
+                  <span class="pulse-lbl">Hadir</span>
+                </div>
+                <div class="pulse-stat">
+                  <span class="pulse-num mono" id="publicCountMungkin">0</span>
+                  <span class="pulse-lbl">Mungkin</span>
+                </div>
+                <div class="pulse-stat">
+                  <span class="pulse-num mono" id="publicCountTotal">0</span>
+                  <span class="pulse-lbl">Total Respons</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Paddock Protocol Notes -->
+            <div class="protocol-card">
+              <h3 class="protocol-title">PROTOKOL AKREDITASI &amp; KEHADIRAN</h3>
+              <ul class="protocol-list">
+                <li>
+                  <i data-lucide="shield-check"></i>
+                  <div>
+                    <strong>Verifikasi Digital Pass</strong>
+                    <p>Tunjukkan kode deterministik atau barcode pada kartu Digital Race Pass saat registrasi pintu masuk hospitality.</p>
+                  </div>
+                </li>
+                <li>
+                  <i data-lucide="clock-4"></i>
+                  <div>
+                    <strong>Open Gate 45 Menit Sebelum Sesi</strong>
+                    <p>Area tribun dan ruang nonton bersama dibuka 45 menit sebelum jadwal WIB masing-masing sesi dimulai.</p>
+                  </div>
+                </li>
+                <li>
+                  <i data-lucide="shirt"></i>
+                  <div>
+                    <strong>Ketentuan Busana</strong>
+                    <p id="protocolDressCode">Smart Motorsport Casual / Team Apparel Resmi.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =================================================================
+       FOOTER WITH DISCREET ADMIN ENTRY ("Akses Penyelenggara" + Ctrl+Shift+A)
+       ================================================================= -->
+  <footer class="site-footer">
+    <div class="kerb-stripe" aria-hidden="true"></div>
+    <div class="container footer-inner">
+      <div class="footer-brand-col">
+        <div class="footer-title">FORMULA 1 QATAR AIRWAYS QATAR GRAND PRIX 2026</div>
+        <p class="footer-copy">
+          Undangan Digital Resmi Seri Ke-22 &bull; Lusail International Circuit, Qatar (27&ndash;29 November 2026). Seluruh waktu mengacu pada Waktu Indonesia Barat (WIB / UTC+7) dan Arabia Standard Time (AST / UTC+3).
+        </p>
+      </div>
+
+      <div class="footer-admin-col">
+        <button type="button" id="btnOpenAdmin" class="admin-trigger-btn" title="Buka Panel Penyelenggara (Ctrl+Shift+A)">
+          <i data-lucide="lock"></i>
+          <span>Akses Penyelenggara</span>
+          <kbd class="shortcut-kbd mono">Ctrl+Shift+A</kbd>
+        </button>
+      </div>
+    </div>
+  </footer>
+
+  <!-- =================================================================
+       MODAL 1: ADMIN PIN PROTECTION MODAL
+       ================================================================= -->
+  <div id="pinModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="pinModalTitle">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-kicker mono">SECURITY GATE // RACE CONTROL</span>
+          <h2 id="pinModalTitle" class="modal-title">AKSES PENYELENGGARA</h2>
+        </div>
+        <button type="button" class="modal-close-btn" data-close-modal="pinModal" aria-label="Tutup modal PIN">
+          <i data-lucide="x"></i>
+        </button>
+      </div>
+
+      <form id="pinForm" class="modal-body" novalidate>
+        <p class="modal-helper-text">
+          Masukkan kode PIN Otorisasi Penyelenggara untuk mengelola daftar tamu, link personalisasi, jadwal WIB, dan rekapitulasi RSVP.
+        </p>
+
+        <div class="form-row">
+          <label for="pinInput" class="form-label">PIN OTORISASI ADMIN</label>
+          <div class="pin-input-wrap">
+            <input type="password" id="pinInput" class="form-input form-input-dark mono pin-field" placeholder="Masukkan PIN" autocomplete="off" required />
+            <button type="button" id="btnTogglePinVis" class="pin-vis-btn" aria-label="Tampilkan atau sembunyikan PIN">
+              <i data-lucide="eye"></i>
+            </button>
+          </div>
+          <p id="pinErrorMsg" class="field-error hidden" role="alert">PIN yang Anda masukkan tidak sesuai. Silakan periksa kembali.</p>
+        </div>
+
+        <div class="modal-footer-actions">
+          <button type="button" class="btn btn-outline-light" data-close-modal="pinModal">Batal</button>
+          <button type="submit" class="btn btn-vermilion">
+            <i data-lucide="unlock"></i>
+            <span>Buka Panel Admin</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =================================================================
+       MODAL 2: FULL ORGANIZER ADMIN PANEL (3 TABS)
+       ================================================================= -->
+  <div id="adminModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle">
+    <div class="modal-dialog modal-xl">
+      <div class="modal-header admin-modal-header">
+        <div class="modal-title-group">
+          <span class="modal-kicker mono">ORGANIZER CONTROL CENTER // QATAR GP 2026</span>
+          <h2 id="adminModalTitle" class="modal-title">PANEL ADMIN PENYELENGGARA</h2>
+        </div>
+        <div class="admin-header-actions">
+          <button type="button" id="btnLockAdmin" class="btn btn-outline-light btn-sm" title="Kunci kembali sesi Admin">
+            <i data-lucide="lock"></i>
+            <span>Kunci Panel</span>
+          </button>
+          <button type="button" class="modal-close-btn" data-close-modal="adminModal" aria-label="Tutup Panel Admin">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 3 Admin Navigation Tabs -->
+      <div class="admin-tabs-bar" role="tablist" aria-label="Menu Panel Admin">
+        <button type="button" class="admin-tab-btn active" data-admin-tab="guests" role="tab" aria-selected="true">
+          <i data-lucide="users"></i>
+          <span>1. Tamu &amp; Buat Link</span>
+        </button>
+        <button type="button" class="admin-tab-btn" data-admin-tab="schedule" role="tab" aria-selected="false">
+          <i data-lucide="calendar-clock"></i>
+          <span>2. Edit Jadwal WIB &amp; Detail Acara</span>
+        </button>
+        <button type="button" class="admin-tab-btn" data-admin-tab="hosting" role="tab" aria-selected="false">
+          <i data-lucide="database"></i>
+          <span>3. Hosting, RSVP &amp; Keamanan</span>
+        </button>
+      </div>
+
+      <div class="modal-body admin-modal-body">
+        <!-- =============================================================
+             ADMIN TAB 1: TAMU & BUAT LINK PERSONAL
+             ============================================================= -->
+        <section id="adminPaneGuests" class="admin-pane active" role="tabpanel">
+          <div class="admin-grid-2">
+            <!-- Single Guest Input Card -->
+            <div class="admin-card">
+              <div class="admin-card-head">
+                <h3 class="admin-card-title">
+                  <i data-lucide="user-plus"></i>
+                  <span>Tambah Tamu Satuan</span>
+                </h3>
+                <span class="badge badge-carbon mono">SINGLE ENTRY</span>
+              </div>
+
+              <form id="singleGuestForm" class="admin-form-stack" novalidate>
+                <div class="form-row">
+                  <label for="guestInputName" class="form-label">NAMA TAMU <span class="req">*</span></label>
+                  <input type="text" id="guestInputName" class="form-input form-input-dark" placeholder="Contoh: Hendra Wijaya" required />
+                </div>
+
+                <div class="form-row">
+                  <label for="guestInputRole" class="form-label">PERAN / KOMUNITAS / INSTANSI</label>
+                  <input type="text" id="guestInputRole" class="form-input form-input-dark" placeholder="Contoh: Ketua F1 Fans Club Jakarta" />
+                </div>
+
+                <div class="form-grid-2">
+                  <div class="form-row">
+                    <label for="guestInputPass" class="form-label">KATEGORI PASS</label>
+                    <select id="guestInputPass" class="form-select form-select-dark">
+                      <option value="Paddock Club VIP">Paddock Club VIP</option>
+                      <option value="Lusail Hospitality Lounge">Lusail Hospitality Lounge</option>
+                      <option value="Main Grandstand">Main Grandstand</option>
+                      <option value="Turn 1 Grandstand">Turn 1 Grandstand</option>
+                      <option value="North Grandstand">North Grandstand</option>
+                      <option value="Lusail Hill General">Lusail Hill General</option>
+                    </select>
+                  </div>
+
+                  <div class="form-row">
+                    <label for="guestInputTribun" class="form-label">TRIBUN / ZONA KURSI</label>
+                    <input type="text" id="guestInputTribun" class="form-input form-input-dark" placeholder="Contoh: Main Grandstand - Zona A" />
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-vermilion btn-block">
+                  <i data-lucide="link"></i>
+                  <span>Buat Link Undangan Personal</span>
+                </button>
+              </form>
+            </div>
+
+            <!-- Bulk Guest Input Card -->
+            <div class="admin-card">
+              <div class="admin-card-head">
+                <h3 class="admin-card-title">
+                  <i data-lucide="list-plus"></i>
+                  <span>Input Massal (Bulk per Baris)</span>
+                </h3>
+                <span class="badge badge-outline-gold mono">BULK IMPORT</span>
+              </div>
+
+              <form id="bulkGuestForm" class="admin-form-stack" novalidate>
+                <div class="form-row">
+                  <label for="bulkGuestTextarea" class="form-label">DAFTAR TAMU (1 BARIS PER TAMU)</label>
+                  <textarea id="bulkGuestTextarea" rows="5" class="form-textarea form-input-dark mono" placeholder="Nama Tamu | Peran/Komunitas | Kategori Pass | Tribun&#10;Arif Nugroho | Scuderia Ferrari ID | Paddock Club VIP | Main Grandstand&#10;Nadya Kusuma | McLaren Indo&#10;Bima Sakti"></textarea>
+                  <small class="form-hint">Format fleksibel: pisahkan dengan <code>|</code> atau cukup tulis nama saja per baris (kolom kosong otomatis memakai default di bawah).</small>
+                </div>
+
+                <div class="form-grid-2">
+                  <div class="form-row">
+                    <label for="bulkDefaultPass" class="form-label">DEFAULT PASS (JIKA KOSONG)</label>
+                    <select id="bulkDefaultPass" class="form-select form-select-dark">
+                      <option value="Paddock Club VIP">Paddock Club VIP</option>
+                      <option value="Lusail Hospitality Lounge">Lusail Hospitality Lounge</option>
+                      <option value="Main Grandstand" selected>Main Grandstand</option>
+                      <option value="Turn 1 Grandstand">Turn 1 Grandstand</option>
+                      <option value="Lusail Hill General">Lusail Hill General</option>
+                    </select>
+                  </div>
+                  <div class="form-row">
+                    <label for="bulkDefaultRole" class="form-label">DEFAULT KOMUNITAS</label>
+                    <input type="text" id="bulkDefaultRole" class="form-input form-input-dark" value="Tamu Undangan Komunitas F1" />
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-gold btn-block">
+                  <i data-lucide="layers"></i>
+                  <span>Proses &amp; Buat Semua Link</span>
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Generated Guest Links Management Table -->
+          <div class="admin-card admin-card-mt">
+            <div class="guest-toolbar">
+              <div class="guest-search-wrap">
+                <i data-lucide="search" class="search-icon"></i>
+                <input type="search" id="guestSearchInput" class="form-input form-input-dark search-input" placeholder="Cari nama tamu, komunitas, pass, tribun, atau kode..." />
+              </div>
+
+              <div class="guest-bulk-actions">
+                <span class="guest-total-pill mono" id="guestTotalCounter">0 TAMU</span>
+                <button type="button" id="btnCopyAllLinks" class="btn btn-outline-light btn-sm">
+                  <i data-lucide="copy-check"></i>
+                  <span>Salin Semua</span>
+                </button>
+                <button type="button" id="btnExportGuestsCsv" class="btn btn-outline-light btn-sm">
+                  <i data-lucide="file-spreadsheet"></i>
+                  <span>Ekspor CSV</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="admin-table-wrap">
+              <table class="admin-table" aria-label="Daftar Link Undangan Tamu">
+                <thead>
+                  <tr>
+                    <th>Tamu &amp; Komunitas</th>
+                    <th>Pass &amp; Tribun</th>
+                    <th>Kode Pass</th>
+                    <th>Aksi &amp; Pengiriman</th>
+                  </tr>
+                </thead>
+                <tbody id="adminGuestTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- =============================================================
+             ADMIN TAB 2: EDIT JADWAL WIB & DETAIL ACARA
+             ============================================================= -->
+        <section id="adminPaneSchedule" class="admin-pane" role="tabpanel">
+          <form id="scheduleConfigForm" novalidate>
+            <div class="admin-grid-2">
+              <!-- Event Details Editor -->
+              <div class="admin-card">
+                <div class="admin-card-head">
+                  <h3 class="admin-card-title">
+                    <i data-lucide="file-text"></i>
+                    <span>Detail Acara &amp; Hospitality</span>
+                  </h3>
+                </div>
+
+                <div class="admin-form-stack">
+                  <div class="form-row">
+                    <label for="cfgEventTitle" class="form-label">JUDUL ACARA UTAMA</label>
+                    <input type="text" id="cfgEventTitle" class="form-input form-input-dark" required />
+                  </div>
+
+                  <div class="form-row">
+                    <label for="cfgHostName" class="form-label">PENYELENGGARA / HOST</label>
+                    <input type="text" id="cfgHostName" class="form-input form-input-dark" required />
+                  </div>
+
+                  <div class="form-row">
+                    <label for="cfgDressCode" class="form-label">DRESS CODE RESMI</label>
+                    <input type="text" id="cfgDressCode" class="form-input form-input-dark" required />
+                  </div>
+
+                  <div class="form-row">
+                    <label for="cfgDefaultTribun" class="form-label">TRIBUN DEFAULT</label>
+                    <input type="text" id="cfgDefaultTribun" class="form-input form-input-dark" required />
+                  </div>
+                </div>
+              </div>
+
+              <!-- WIB Session Times Editor -->
+              <div class="admin-card">
+                <div class="admin-card-head">
+                  <h3 class="admin-card-title">
+                    <i data-lucide="clock"></i>
+                    <span>Edit Jam Sesi (WIB / UTC+7)</span>
+                  </h3>
+                  <span class="badge badge-maroon mono">AUTO-SYNC AST &amp; .ICS</span>
+                </div>
+
+                <p class="admin-helper-note">
+                  Setiap perubahan jam WIB otomatis menyinkronkan hitung mundur Hero, konversi AST (UTC+3), file kalender <code>.ics</code>, serta parameter URL pada seluruh link undangan tamu.
+                </p>
+
+                <div id="adminSessionEditors" class="session-editors-stack">
+                  <!-- Populated dynamically for FP1, FP2, FP3, Qualifying, Race -->
+                </div>
+              </div>
+            </div>
+
+            <div class="admin-sticky-save">
+              <button type="button" id="btnResetScheduleDefaults" class="btn btn-outline-light">
+                <i data-lucide="rotate-ccw"></i>
+                <span>Reset ke Jadwal Resmi FIA</span>
+              </button>
+              <button type="submit" class="btn btn-vermilion">
+                <i data-lucide="save"></i>
+                <span>Simpan &amp; Sinkronkan Semua Perubahan</span>
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <!-- =============================================================
+             ADMIN TAB 3: HOSTING, RSVP & KEAMANAN
+             ============================================================= -->
+        <section id="adminPaneHosting" class="admin-pane" role="tabpanel">
+          <div class="admin-grid-2">
+            <!-- Base URL Hosting & GitHub Pages Preset -->
+            <div class="admin-card">
+              <div class="admin-card-head">
+                <h3 class="admin-card-title">
+                  <i data-lucide="globe-2"></i>
+                  <span>Konfigurasi Base URL Hosting</span>
+                </h3>
+              </div>
+
+              <div class="admin-form-stack">
+                <div class="form-row">
+                  <label for="cfgBaseUrl" class="form-label">BASE URL PUBLIK (UNTUK GENERATE LINK TAMU)</label>
+                  <input type="url" id="cfgBaseUrl" class="form-input form-input-dark mono" placeholder="https://username.github.io/f1-qatar-2026/" />
+                  <small class="form-hint">Kosongkan untuk otomatis memakai alamat halaman saat ini.</small>
+                </div>
+
+                <div class="gh-preset-box">
+                  <div class="gh-preset-title mono">PRESET CEPAT GITHUB PAGES</div>
+                  <div class="form-grid-2">
+                    <input type="text" id="ghUsername" class="form-input form-input-dark mono" placeholder="username-github" />
+                    <input type="text" id="ghRepo" class="form-input form-input-dark mono" placeholder="nama-repo" />
+                  </div>
+                  <div class="gh-preset-actions">
+                    <button type="button" id="btnApplyGhPreset" class="btn btn-outline-light btn-sm">
+                      <i data-lucide="git-branch"></i>
+                      <span>Terapkan Preset GitHub Pages</span>
+                    </button>
+                    <button type="button" id="btnUseCurrentOrigin" class="btn btn-outline-light btn-sm">
+                      <i data-lucide="link-2"></i>
+                      <span>Gunakan URL Aktif Saat Ini</span>
+                    </button>
+                  </div>
+                </div>
+
+                <button type="button" id="btnSaveBaseUrl" class="btn btn-gold btn-block">
+                  <i data-lucide="check"></i>
+                  <span>Simpan Base URL &amp; Perbarui Link</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Security (PIN Change) & JSON Backup/Restore -->
+            <div class="admin-card">
+              <div class="admin-card-head">
+                <h3 class="admin-card-title">
+                  <i data-lucide="shield"></i>
+                  <span>Keamanan PIN &amp; Cadangan Data JSON</span>
+                </h3>
+              </div>
+
+              <form id="changePinForm" class="admin-form-stack" novalidate>
+                <div class="form-grid-2">
+                  <div class="form-row">
+                    <label for="oldPinInput" class="form-label">PIN SAAT INI</label>
+                    <input type="password" id="oldPinInput" class="form-input form-input-dark mono" placeholder="PIN lama" required />
+                  </div>
+                  <div class="form-row">
+                    <label for="newPinInput" class="form-label">PIN BARU (MIN. 4 KARAKTER)</label>
+                    <input type="password" id="newPinInput" class="form-input form-input-dark mono" placeholder="PIN baru" required minlength="4" />
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-outline-light btn-sm">
+                  <i data-lucide="key-round"></i>
+                  <span>Perbarui PIN Admin</span>
+                </button>
+              </form>
+
+              <hr class="admin-divider" />
+
+              <div class="backup-section">
+                <div class="form-label">EKSPOR / IMPOR CADANGAN PENUH (.JSON)</div>
+                <p class="admin-helper-note">Mencakup daftar tamu, perubahan jadwal WIB, detail acara, pengaturan Base URL, dan seluruh data RSVP.</p>
+                <div class="backup-btn-grid">
+                  <button type="button" id="btnExportBackupJson" class="btn btn-vermilion btn-sm">
+                    <i data-lucide="download"></i>
+                    <span>Ekspor Backup JSON</span>
+                  </button>
+                  <label for="importBackupFileInput" class="btn btn-outline-light btn-sm file-btn-label">
+                    <i data-lucide="upload"></i>
+                    <span>Impor Backup JSON</span>
+                  </label>
+                  <input type="file" id="importBackupFileInput" accept=".json,application/json" class="sr-only" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RSVP Recap & Statistics Card -->
+          <div class="admin-card admin-card-mt">
+            <div class="admin-card-head">
+              <h3 class="admin-card-title">
+                <i data-lucide="clipboard-check"></i>
+                <span>Rekapitulasi &amp; Statistik RSVP Tamu</span>
+              </h3>
+              <div class="guest-bulk-actions">
+                <button type="button" id="btnExportRsvpCsv" class="btn btn-outline-light btn-sm">
+                  <i data-lucide="download"></i>
+                  <span>Ekspor CSV RSVP</span>
+                </button>
+                <button type="button" id="btnClearAllRsvps" class="btn btn-outline-danger btn-sm">
+                  <i data-lucide="trash-2"></i>
+                  <span>Hapus Semua RSVP</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- RSVP Summary Stat Boxes -->
+            <div class="rsvp-stats-grid" id="adminRsvpStatsGrid">
+              <!-- Populated dynamically -->
+            </div>
+
+            <div class="admin-table-wrap">
+              <table class="admin-table" aria-label="Rekapitulasi RSVP Tamu">
+                <thead>
+                  <tr>
+                    <th>Nama Tamu</th>
+                    <th>Status</th>
+                    <th>Sesi Diikuti</th>
+                    <th>Tim Dukungan &amp; Catatan</th>
+                    <th>Waktu Input</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="adminRsvpTableBody">
+                  <!-- Populated dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- =================================================================
+       MODAL 3: CUSTOM CONFIRMATION DIALOG (Replaces window.confirm)
+       ================================================================= -->
+  <div id="confirmModal" class="modal-backdrop hidden" role="alertdialog" aria-modal="true" aria-labelledby="confirmModalTitle" aria-describedby="confirmModalMessage">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span class="modal-kicker mono">KONFIRMASI TINDAKAN</span>
+          <h2 id="confirmModalTitle" class="modal-title">KONFIRMASI</h2>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p id="confirmModalMessage" class="modal-helper-text"></p>
+        <div class="modal-footer-actions">
+          <button type="button" id="btnConfirmCancel" class="btn btn-outline-light">Batal</button>
+          <button type="button" id="btnConfirmOk" class="btn btn-vermilion">Lanjutkan</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Stack (Replaces window.alert) -->
+  <div id="toastContainer" class="toast-container" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- External Libraries: Lucide Icons & Leaflet 1.9.4 -->
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Application Script -->
+  <script src="js/app.js"></script>
+</body>
+</html>
